@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kafilicious.popularmovies.Adapters.MovieListAdapter;
 import com.kafilicious.popularmovies.Database.MovieContract;
@@ -65,20 +66,20 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int THEMOVIEDB_SEARCH_LOADER = 0;
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
+    private static final String SORT_POPULAR = "popular";
+    private static final String SORT_RATED = "top_rated";
+    private static final String SORT_BY_FAVORITES = "favorites";
+    int currentPageNo = 1, totalPageNo = 1;
+    long totalPages = 0;
+    long totalResults = 0;
+    String sortType = null;
+    MovieListAdapter adapter;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private List<MovieList> movie_list;
     private TextView mMovieCountTextView, mPageTextView, mCurrentPageTextView, ofTextView;
     private ImageView rightArrow, leftArrow;
-    int currentPageNo = 1, totalPageNo = 1;
     private CoordinatorLayout coordinatorLayout;
-    private static final String SORT_POPULAR = "popular";
-    private static final String SORT_RATED = "top_rated";
-    private static final String SORT_BY_FAVORITES = "favorites";
-    long totalPages = 0;
-    long totalResults = 0;
-    String sortType = null;
-    MovieListAdapter adapter;
     private SharedPreferences prefs = null;
 
     @Override
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Popular Movies");
         setSupportActionBar(toolbar);
 
@@ -252,66 +253,6 @@ public class MainActivity extends AppCompatActivity
         adapter.setMovieData(new ArrayList<MovieList>());
     }
 
-    public class FetchFavorites extends AsyncTask<Void, Void, List<MovieList>> {
-        String selection = null;
-        String[] selectionArgs = null;
-        String sortOrder = MovieContract.MovieEntry._ID + " ASC";
-        List<MovieList> movieLists = new ArrayList<MovieList>();
-        String[] projection = {
-                MovieContract.MovieEntry.COLUMN_MOVIE_ID, MovieContract.MovieEntry.COLUMN_MOVIE_TITLE,
-                MovieContract.MovieEntry.COLUMN_MOVIE_POSTR_PATH, MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,
-                MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE, MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH,
-                MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT, MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE
-        };
-
-        @Override
-        protected void onPreExecute() {
-            showLoading();
-        }
-
-        @Override
-        protected List<MovieList> doInBackground(Void... params) {
-            Cursor mCursor = null;
-
-            mCursor = getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
-                    projection,
-                    null,
-                    null,
-                    null); 
-            try {
-
-                MovieList movies = new MovieList();
-                mCursor.moveToPosition(-1);
-                while (mCursor.moveToNext()) {
-
-                    movies.id = Long.parseLong(mCursor.getString(0));
-                    movies.title = mCursor.getString(1);
-                    movies.posterPath = mCursor.getString(2);
-                    movies.overview = mCursor.getString(3);
-                    movies.voteAverage = Double.parseDouble(mCursor.getString(4));
-                    movies.backdropPath = mCursor.getString(5);
-                    movies.voteCount = Long.parseLong(mCursor.getString(6));
-                    movies.releaseDate = mCursor.getString(7);
-
-                    movieLists.add(movies);
-                    Log.i(TAG, "favorite list was updated with " + movies.title+ "!");
-                }
-                return movieLists;
-            } finally {
-                mCursor.close();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<MovieList> data) {
-            if (data != null && !data.isEmpty()) {
-                updateUI();
-                adapter.setMovieData(data);
-            }
-        }
-    }
-
-
     public void fetchMovies(final String sort, final int page) {
         if (isNetworkAvailable()) {
             loadMovies(sort, page);
@@ -334,11 +275,38 @@ public class MainActivity extends AppCompatActivity
     public void showViews() {
         mPageTextView.setVisibility(View.VISIBLE);
         ofTextView.setVisibility(View.VISIBLE);
+        mCurrentPageTextView.setVisibility(View.VISIBLE);
+        rightArrow.setVisibility(View.VISIBLE);
+    }
+
+    public void hideViews() {
+        mPageTextView.setVisibility(View.GONE);
+        ofTextView.setVisibility(View.GONE);
+        mCurrentPageTextView.setVisibility(View.GONE);
+        rightArrow.setVisibility(View.GONE);
+        leftArrow.setVisibility(View.GONE);
     }
 
     public void setTextViews(long pages, long results) {
         mMovieCountTextView.setText(String.valueOf(results));
         mPageTextView.setText(String.valueOf(pages));
+    }
+
+    public void setSubtitle(String sort_type) {
+        if (getSupportActionBar() != null && sort_type != null) {
+            switch (sort_type) {
+                case SORT_POPULAR:
+                default:
+                    getSupportActionBar().setSubtitle("Most Popular Movies");
+                    break;
+                case SORT_RATED:
+                    getSupportActionBar().setSubtitle("Top Rated Movies");
+                    break;
+                case SORT_BY_FAVORITES:
+                    getSupportActionBar().setSubtitle("My Favorite Movies");
+                    break;
+            }
+        }
     }
 
     public void updateUI() {
@@ -354,6 +322,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void loadMovies(String sort, int page) {
+        setSubtitle(sort);
         if (sort == SORT_BY_FAVORITES)
             new FetchFavorites().execute();
         else {
@@ -472,5 +441,79 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putString("sortPref", sortType);
         outState.putString("pageNo", String.valueOf(currentPageNo));
+    }
+
+    public class FetchFavorites extends AsyncTask<Void, Void, Cursor> {
+        String selection = null;
+        String[] selectionArgs = null;
+        String sortOrder = MovieContract.MovieEntry._ID + " ASC";
+        List<MovieList> movieLists = new ArrayList<MovieList>();
+        String[] projection = {
+                MovieContract.MovieEntry.COLUMN_MOVIE_ID, MovieContract.MovieEntry.COLUMN_MOVIE_TITLE,
+                MovieContract.MovieEntry.COLUMN_MOVIE_POSTR_PATH, MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,
+                MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE, MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH,
+                MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT, MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE
+        };
+
+        @Override
+        protected void onPreExecute() {
+            showLoading();
+        }
+
+        @Override
+        protected Cursor doInBackground(Void... params) {
+            Cursor mCursor = null;
+            try {
+                return getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
+                        projection,
+                        null,
+                        null,
+                        null);
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to asynchronously load data.");
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(Cursor data) {
+            List<MovieList> movieList_from_cursor = new ArrayList<>();
+            if (data != null) {
+                if (data.moveToFirst()) {
+                    do {
+                        MovieList movies = new MovieList();
+                        movies.id = Long.parseLong(data.getString(data.getColumnIndex(MovieContract
+                                .MovieEntry.COLUMN_MOVIE_ID)));
+                        movies.title = data.getString(data.getColumnIndex(MovieContract.MovieEntry
+                                .COLUMN_MOVIE_TITLE));
+                        movies.posterPath = data.getString(data.getColumnIndex(MovieContract.MovieEntry
+                                .COLUMN_MOVIE_POSTR_PATH));
+                        movies.backdropPath = data.getString(data.getColumnIndex(MovieContract
+                                .MovieEntry.COLUMN_MOVIE_BACKDROP_PATH));
+                        movies.overview = data.getString(data.getColumnIndex(MovieContract.MovieEntry
+                                .COLUMN_MOVIE_OVERVIEW));
+                        movies.releaseDate = data.getString(data.getColumnIndex(MovieContract
+                                .MovieEntry.COLUMN_MOVIE_RELEASE_DATE));
+                        movies.voteCount = Long.parseLong(data.getString(data
+                                .getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT)));
+                        movies.voteAverage = Double.parseDouble(data.getString(data.
+                                getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE)));
+
+                        movieList_from_cursor.add(movies);
+                    } while (data.moveToNext());
+
+                    movie_list = movieList_from_cursor;
+                    adapter.setMovieData(movie_list);
+                    updateUI();
+                    hideViews();
+                    mMovieCountTextView.setText(String.valueOf(movie_list.size()));
+                } else {
+                    Toast.makeText(MainActivity.this, "No Movies added yet, Please add movies",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }
     }
 }

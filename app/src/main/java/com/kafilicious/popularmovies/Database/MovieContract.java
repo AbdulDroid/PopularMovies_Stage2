@@ -45,6 +45,7 @@ public class MovieContract {
         public static final String COLUMN_MOVIE_VOTE_AVERAGE = "vote_average";
         public static final String COLUMN_MOVIE_TOTAL_PAGES = "total_pages";
         public static final String COLUMN_MOVIE_TOTAL_RESULTS = "total_results";
+        public static final String COLUMN_FAVORITES = "favorites";
 
     }
 

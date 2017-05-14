@@ -25,7 +25,7 @@ import com.kafilicious.popularmovies.Database.MovieContract.MovieEntry;
 public class MovieDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "favorites.db";
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public MovieDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,7 +45,9 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE + " TEXT NOT NULL, " +
                 MovieEntry.COLUMN_MOVIE_VOTE_COUNT + " TEXT NOT NULL, " +
                 MovieEntry.COLUMN_MOVIE_TOTAL_PAGES + " INTEGER, " +
-                MovieEntry.COLUMN_MOVIE_TOTAL_RESULTS + " INTEGER);" ;
+                MovieEntry.COLUMN_MOVIE_TOTAL_RESULTS + " INTEGER, " +
+                MovieEntry.COLUMN_FAVORITES + " INTEGER" +
+                ");";
 
         db.execSQL(SQL_CREATE_MOVIE_TABLE);
     }
