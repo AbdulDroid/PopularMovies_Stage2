@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  Copyright (C) 2017 Popular Movies, Stage 2
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/margrinTop_five"
+    android:background="#F5F5F5"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.kafilicious.popularmovies.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+        <RelativeLayout
+            android:id="@+id/info"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height_content"
+            android:background="@android:color/white">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="@dimen/height_width_fifteen"
+                android:layout_height="@dimen/height_width_fifteen"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/padding_left_or_right"
+                android:src="@drawable/ic_video_library_black_24dp" />
+
+            <TextView
+                android:id="@+id/total_movies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margrinTop_five"
+                android:layout_toRightOf="@id/icon"
+                android:textColor="@android:color/tertiary_text_dark"
+                android:textSize="@dimen/text_size_content"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/right_arrow"
+                android:layout_width="@dimen/height_width_thirty"
+                android:layout_height="@dimen/height_width_thirty"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/margrinTop_five"
+                android:src="@drawable/ic_chevron_right_black_24dp" />
+
+            <TextView
+                android:id="@+id/tv_total_pages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/margrinTop_five"
+                android:layout_toLeftOf="@id/right_arrow"
+                android:background="@drawable/urllinkbackground"
+                android:paddingBottom="@dimen/margrinTop_five"
+                android:paddingLeft="@dimen/padding_left_or_right"
+                android:paddingRight="@dimen/padding_left_or_right"
+                android:paddingTop="@dimen/margrinTop_five"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_content" />
+
+            <TextView
+                android:id="@+id/tv_of"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/margrinTop_five"
+                android:layout_toLeftOf="@id/tv_total_pages"
+                android:text="@string/of"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_content" />
+
+
+            <TextView
+                android:id="@+id/tv_page_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/page_no"
+                android:layout_marginLeft="@dimen/margrinTop_five"
+                android:layout_toLeftOf="@id/tv_of"
+                android:background="@drawable/urllinkbackground"
+                android:paddingBottom="@dimen/margrinTop_five"
+                android:paddingLeft="@dimen/padding_left_or_right"
+                android:paddingRight="@dimen/padding_left_or_right"
+                android:paddingTop="@dimen/margrinTop_five"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_content" />
+
+            <ImageView
+                android:id="@+id/left_arrow"
+                android:layout_width="@dimen/height_width_thirty"
+                android:layout_height="@dimen/height_width_thirty"
+                android:layout_centerInParent="true"
+                android:layout_toLeftOf="@id/tv_page_no"
+                android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:backgroundTint="@color/grey"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_movie_posters"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/info" />
+
+</RelativeLayout>

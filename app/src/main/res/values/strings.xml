@@ -1,0 +1,47 @@
+<!--
+  Copyright (C) 2017 Popular Movies, Stage 2
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<resources>
+    <!--String Resources for the MainActivity.class-->
+    <string name="app_name">Popular Movies</string>
+    <string name="of">of</string>
+    <string name="page_no">1</string>
+    <string name="placeHolder_text_title">Android Lollipop</string>
+    <string name="placeHolder_text_year">2015</string>
+    <string name="placeHolder_text_vote">(300)</string>
+    <string name="placeHolder_text_rating">4.0</string>
+    <string name="authors_name">Dummy Name</string>
+
+    <!-- String Resources for the DetailsActivity class-->
+    <string name="overview">Plot Synopsis</string>
+    <string name="vote_average">Vote Average</string>
+    <string name="button_text">Mark As Favorite</string>
+    <string name="button_text_marked">Marked as Favorite</string>
+    <string name="rating">Rating</string>
+    <string name="trailer_text">Official Trailers/Trailers or Teasers</string>
+    <string name="review_text">Reviews</string>
+    <string name="video_error_message">No Trailers or Teaser was found for %1$s</string>
+    <string name="review_error_message">No review was found for %1$s</string>
+    <string name="content_descriptor">Movie Poster</string>
+
+    <!--String resources for the Main Menu-->
+    <string name="action_about">About App</string>
+    <string name="action_setting">Settings</string>
+    <string name="action_sort_by">Sort By</string>
+    <string name="sort_by_popular">Popular</string>
+    <string name="sort_by_top_rated">Top rated</string>
+    <string name="sort_by_favorite">My Favorites</string>
+</resources>
