@@ -101,7 +101,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
         holder.titleTextView.setText(movieTitle);
         holder.voterTextView.setText(String.valueOf(movieVoters));
         holder.releaseTextView.setText(movieRelease);
-        holder.ratingTextView.setText(String.valueOf(rating_score));
+        holder.ratingTextView.setText(String.format("%.1f", rating_score));
         holder.ratingBar.setRating(rating_score);
         String url = NetworkUtils.buildMovieUrl(moviePoster, 0).toString();
         Picasso.with(context).load(url)

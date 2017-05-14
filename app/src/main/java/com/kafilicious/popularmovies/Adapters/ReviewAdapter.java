@@ -2,6 +2,7 @@ package com.kafilicious.popularmovies.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,33 +31,20 @@ import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder> {
 
-    private List<ReviewResults> review_results;
     Context context;
+    private List<ReviewResults> review_results;
 
-    public void setData(List<ReviewResults> reviewData){
-        this.review_results = reviewData;
-        notifyDataSetChanged();
+    public ReviewAdapter(Context context) {
+        this.context = context;
     }
 
     public ReviewAdapter(List<ReviewResults> results){
         this.review_results = results;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-        TextView authorTextView, reviewTextView;
-
-        public ViewHolder(View view){
-            super(view);
-            view.setClickable(true);
-            view.setOnClickListener(this);
-            authorTextView = (TextView) view.findViewById(R.id.review_author);
-            reviewTextView = (TextView) view.findViewById(R.id.review_text);
-        }
-        @Override
-        public void onClick(View v) {
-
-        }
+    public void setData(List<ReviewResults> reviewData) {
+        this.review_results = reviewData;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -70,8 +58,14 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        String text = String.format(context.getResources().getString(R.string.review_content_text),
+                review_results.get(position).url);
         holder.authorTextView.setText(review_results.get(position).author);
-        holder.reviewTextView.setText(review_results.get(position).content);
+        if (review_results.get(position).content.length() > 200) {
+            holder.reviewTextView.setText(review_results.get(position).content + text);
+        } else {
+            holder.reviewTextView.setText(review_results.get(position).content);
+        }
 
     }
 
@@ -81,5 +75,24 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             return review_results.size();
         }
         return 0;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        TextView authorTextView, reviewTextView;
+
+        public ViewHolder(View view) {
+            super(view);
+            view.setClickable(true);
+            view.setOnClickListener(this);
+            authorTextView = (TextView) view.findViewById(R.id.review_author);
+            reviewTextView = (TextView) view.findViewById(R.id.review_text);
+            reviewTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+
+        @Override
+        public void onClick(View v) {
+
+        }
     }
 }

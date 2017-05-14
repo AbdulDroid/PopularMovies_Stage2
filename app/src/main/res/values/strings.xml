@@ -36,6 +36,7 @@
     <string name="video_error_message">No Trailers or Teaser was found for %1$s</string>
     <string name="review_error_message">No review was found for %1$s</string>
     <string name="content_descriptor">Movie Poster</string>
+    <string name="review_content_text">Read the Complete Review at %1$s</string>
 
     <!--String resources for the Main Menu-->
     <string name="action_about">About App</string>

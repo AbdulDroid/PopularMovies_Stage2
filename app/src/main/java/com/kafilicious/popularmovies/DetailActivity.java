@@ -1,7 +1,9 @@
 package com.kafilicious.popularmovies;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -79,10 +82,16 @@ public class DetailActivity extends AppCompatActivity {
     private ArrayList<ReviewResults> review_results;
     private ContentValues contentValues = new ContentValues();
     private String selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=?";
-    private TextView titleTextView, releaseDateTextView,ratingTextView,voteCountTextView,overviewTextView,voteAverageTextView;
+    private TextView titleTextView, releaseDateTextView, ratingTextView, voteCountTextView, overviewTextView, voteAverageTextView;
     private ImageView posterImageView, backDropImageView;
     private RatingBar ratingBar;
     private CollapsingToolbarLayout collapsingToolbar;
+
+    public static boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +101,7 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -119,21 +128,27 @@ public class DetailActivity extends AppCompatActivity {
         videoRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager gridLayout = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
         reviewRecyclerView.setLayoutManager(layoutManager);
-        videoRecyclerView.setLayoutManager(layoutManager1);
-        rAdapter =  new ReviewAdapter(review_results);
+        if (isTablet(this))
+            videoRecyclerView.setLayoutManager(gridLayout);
+        else
+            videoRecyclerView.setLayoutManager(layoutManager1);
+        rAdapter = new ReviewAdapter(review_results);
         reviewRecyclerView.setAdapter(rAdapter);
         vAdapter = new VideoAdapter(this, video_results);
         videoRecyclerView.setAdapter(vAdapter);
         dbHelper = new MovieDbHelper(this);
         if (movieIsStored()) {
             favoriteButton.setText(R.string.button_text_marked);
+        } else {
+            favoriteButton.setText(R.string.button_text);
         }
-        if (intent != null && intent.hasExtra(MOVIE_TITLE)){
+        if (intent != null && intent.hasExtra(MOVIE_TITLE)) {
             actionBar.setTitle(intent.getStringExtra(MOVIE_TITLE) + " (" +
-                    intent.getStringExtra(MOVIE_RELEASE).substring(0,4) + ")");
+                    intent.getStringExtra(MOVIE_RELEASE).substring(0, 4) + ")");
             collapsingToolbar.setTitle(intent.getStringExtra(MOVIE_TITLE) + " (" +
-                    intent.getStringExtra(MOVIE_RELEASE).substring(0,4) + ")");
+                    intent.getStringExtra(MOVIE_RELEASE).substring(0, 4) + ")");
             collapsingToolbar.setExpandedTitleColor(getResources()
                     .getColor(android.R.color.darker_gray));
             collapsingToolbar.setCollapsedTitleTextColor(getResources()
@@ -171,15 +186,15 @@ public class DetailActivity extends AppCompatActivity {
                     .into(backDropImageView);
 
             double voteAverage = Double.parseDouble(movieVoteAverage);
-            voteAverage = (voteAverage/10)*5;
-            String rating = String.format("%.1f",voteAverage);
+            voteAverage = (voteAverage / 10) * 5;
+            String rating = String.format("%.1f", voteAverage);
             voteAverage = Double.parseDouble(rating);
             ratingTextView.setText(rating);
-            ratingBar.setRating((float)voteAverage);
-            ratingBar.setStepSize((float)0.1);
+            ratingBar.setRating((float) voteAverage);
+            ratingBar.setStepSize((float) 0.1);
 
             text = intent.getStringExtra(MOVIE_TITLE) + "(" +
-                    intent.getStringExtra(MOVIE_RELEASE).substring(0,4) + ")";
+                    intent.getStringExtra(MOVIE_RELEASE).substring(0, 4) + ")";
 
             Log.i("Results", "ID set successful");
             new FetchVideosDetails().execute(String.valueOf(id));
@@ -192,11 +207,11 @@ public class DetailActivity extends AppCompatActivity {
                     if (movieIsStored()) {
                         favoriteButton.setText(R.string.button_text);
                         int deletedMovie = getContentResolver().delete(MovieContract.MovieEntry
-                                        .CONTENT_URI, selection, selectionArgs);
+                                .CONTENT_URI, selection, selectionArgs);
                         Log.i("Movie deleted", String.valueOf(deletedMovie));
                         Toast.makeText(DetailActivity.this, movieTitle +
                                 " has being removed from My Favorites", Toast.LENGTH_LONG).show();
-                    }else{
+                    } else {
                         favoriteButton.setText(R.string.button_text_marked);
                         ContentValues values = new ContentValues();
                         values.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, movieTitle);
@@ -216,7 +231,6 @@ public class DetailActivity extends AppCompatActivity {
 
                 }
             });
-
 
 
         }
@@ -273,14 +287,14 @@ public class DetailActivity extends AppCompatActivity {
         protected Void doInBackground(String... params) {
             String ids = params[0];
 
-            try{
+            try {
                 URL url = NetworkUtils.buildVideoDetailsUrl(ids, 1);
                 String json = NetworkUtils.getResponseFromHttpUrl(url);
-                try{
+                try {
                     video_results.clear();
                     JSONObject object = new JSONObject(json);
                     JSONArray result = object.getJSONArray("results");
-                    for (int i = 0; i<result.length(); i++){
+                    for (int i = 0; i < result.length(); i++) {
                         JSONObject obj = result.getJSONObject(i);
 
                         VideoResults results = new VideoResults();
@@ -288,16 +302,13 @@ public class DetailActivity extends AppCompatActivity {
                         results.key = obj.getString("key");
                         results.site = obj.getString("site");
                         results.name = obj.getString("name");
-
-                        if (results.type.equals("Trailer") || results.type.equals("Teaser")) {
-                            video_results.add(results);
+                        video_results.add(results);
 //                            Log.i("Results", "video results updated");
-                        }
                     }
-                }catch(JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -308,41 +319,43 @@ public class DetailActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            if(video_results.isEmpty()){
+            if (video_results.isEmpty()) {
                 showVideoErrorMessage();
-            }else {
+            } else {
                 vAdapter.setData(video_results);
                 Log.i("Results", "Adapter data updated");
             }
         }
     }
 
-    public class FetchReviewTask extends AsyncTask<String, Void, Void>{
+    public class FetchReviewTask extends AsyncTask<String, Void, Void> {
 
         @Override
         protected Void doInBackground(String... params) {
             String ids1 = params[0];
-            try{
+            try {
                 URL url = NetworkUtils.buildVideoDetailsUrl(ids1, 2);
                 String json = NetworkUtils.getResponseFromHttpUrl(url);
-                try{
+                try {
                     review_results.clear();
                     JSONObject obj = new JSONObject(json);
                     JSONArray results = obj.getJSONArray("results");
 
-                    for (int i = 0; i < results.length(); i++){
+                    for (int i = 0; i < results.length(); i++) {
                         JSONObject object = results.getJSONObject(i);
 
                         ReviewResults result = new ReviewResults();
+                        result.id = object.getString("id");
                         result.author = object.getString("author");
                         result.content = object.getString("content");
+                        result.url = object.getString("url");
                         review_results.add(result);
                         Log.i("Results", "review results updated");
                     }
-                }catch (JSONException ex){
+                } catch (JSONException ex) {
                     ex.printStackTrace();
                 }
-            }catch (IOException ex){
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
             return null;
@@ -352,9 +365,9 @@ public class DetailActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            if(review_results.isEmpty()){
+            if (review_results.isEmpty()) {
                 showReviewErrorMessage();
-            }else {
+            } else {
                 rAdapter.setData(review_results);
                 Log.i("Results", "Adapter data updated");
             }

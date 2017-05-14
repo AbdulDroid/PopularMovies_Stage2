@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey("sortPref")
-                    && savedInstanceState.containsKey("pageNo")) {
+                    || savedInstanceState.containsKey("pageNo")) {
                 sortType = savedInstanceState.getString("sortPref");
                 currentPageNo = Integer.parseInt(savedInstanceState.getString("pageNo"));
                 Log.i(TAG, "SavedInstanceState: " + currentPageNo);

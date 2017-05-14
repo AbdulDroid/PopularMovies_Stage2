@@ -42,19 +42,50 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
     List<VideoResults>video_results;
     private Context context;
 
-    public void setData(List<VideoResults> videoData){
-        this.video_results = videoData;
-    }
-
-    public VideoAdapter(Context context, List<VideoResults> results){
+    public VideoAdapter(Context context, List<VideoResults> results) {
         this.context = context;
         this.video_results = results;
     }
 
+    public void setData(List<VideoResults> videoData){
+        this.video_results = videoData;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        View view;
+        view = LayoutInflater.from(context).inflate(R.layout.video_content, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        String site = video_results.get(position).site;
+
+        holder.videoName.setText(video_results.get(position).name);
+        holder.videoType.setText(video_results.get(position).type);
+
+        if (site.equals("YouTube")) {
+
+            String url = NetworkUtils.buildYoutubeImageUrl(video_results.get(position).key).toString();
+            holder.playImageView.setVisibility(View.VISIBLE);
+            Picasso.with(context)
+                    .load(url)
+                    .into(holder.youtubeImageView);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        if (video_results == null) return 0;
+        return video_results.size();
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView youtubeImageView;
-        TextView videoType;
+        TextView videoType, videoName;
         CircleImageView playImageView;
 
         public ViewHolder(View view) {
@@ -62,6 +93,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             view.setClickable(true);
             view.setOnClickListener(this);
             youtubeImageView = (ImageView) view.findViewById(R.id.youtube_iv);
+            videoName = (TextView) view.findViewById(R.id.video_name);
             videoType = (TextView) view.findViewById(R.id.video_type);
             playImageView = (CircleImageView) view.findViewById(R.id.circle_play);
         }
@@ -83,36 +115,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             }
 
         }
-    }
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        View view;
-        view = LayoutInflater.from(context).inflate(R.layout.video_content, parent,false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        String site = video_results.get(position).site;
-
-            holder.videoType.setText(video_results.get(position).name);
-
-            if (site.equals("YouTube")) {
-
-                String url = NetworkUtils.buildYoutubeImageUrl(video_results.get(position).key).toString();
-                holder.playImageView.setVisibility(View.VISIBLE);
-                Picasso.with(context)
-                        .load(url)
-                        .into(holder.youtubeImageView);
-            }
-        }
-
-    @Override
-    public int getItemCount() {
-        if (video_results == null)return 0;
-        return video_results.size();
     }
 
 
