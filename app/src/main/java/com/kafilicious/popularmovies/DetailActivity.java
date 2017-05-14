@@ -160,12 +160,12 @@ public class DetailActivity extends AppCompatActivity {
             voteAverageTextView.setText(movieVoteAverage + "/10");
             voteCountTextView.setText(movieVoteCount);
             overviewTextView.setText(movieOverview);
-            String url1 = NetworkUtils.buildMovieUrl(moviePoster).toString();
+            String url1 = NetworkUtils.buildMovieUrl(moviePoster, 0).toString();
             Picasso.with(this)
                     .load(url1)
                     .into(posterImageView);
 
-            String url2 = NetworkUtils.buildMovieUrl(movieBackdrop).toString();
+            String url2 = NetworkUtils.buildMovieUrl(movieBackdrop, 1).toString();
             Picasso.with(this)
                     .load(url2)
                     .into(backDropImageView);

@@ -37,6 +37,8 @@ public class NetworkUtils {
             "http://image.tmdb.org/t/p/";
     private static final String DEFAULT_IMAGE_SIZE =
             "w185/";
+    private static final String BACKDROP_IMAGE_SIZE =
+            "w342/";
     private static final String BASE_YOUTUBE_IMG_URL =
             "https://img.youtube.com/vi/";
     private static final String END_TAG_YOUTUBE_IMAGE_URL =
@@ -89,10 +91,16 @@ public class NetworkUtils {
         return buildUrl(videoUrl);
     }
 
-    public static URL buildMovieUrl(String path){
-        String movieAds = BASE_IMAGE_URL + DEFAULT_IMAGE_SIZE + path;
+    public static URL buildMovieUrl(String path, int task) {
+        String movieAds = null;
+        if (task == 0)
+            movieAds = BASE_IMAGE_URL + DEFAULT_IMAGE_SIZE + path;
+        else if (task == 1)
+            movieAds = BASE_IMAGE_URL + BACKDROP_IMAGE_SIZE + path;
+
         return buildUrl(movieAds);
     }
+
 
     public static String getResponseFromHttpUrl(URL url) throws IOException{
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();

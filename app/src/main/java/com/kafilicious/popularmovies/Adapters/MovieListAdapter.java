@@ -38,8 +38,9 @@ import java.util.List;
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder> {
 
 
+    private static final int TYPE_CURSOR = 1;
+    private static final int TYPE_ARRAY = 2;
     Context context;
-    private List<MovieList> movie_list;
     String MOVIE_TITLE = "title";
     String MOVIE_OVERVIEW = "overview";
     String MOVIE_RELEASE = "release_date";
@@ -49,8 +50,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
     String MOVIE_BACK_DROP = "backdrop_path";
     String MOVIE_ID = "id";
     Cursor mCursor = null;
-    private static final int TYPE_CURSOR = 1;
-    private static final int TYPE_ARRAY = 2;
+    private List<MovieList> movie_list;
 
 
     public MovieListAdapter(List<MovieList> movies) {
@@ -73,6 +73,46 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
             this.notifyDataSetChanged();
         }
         return temp;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        View view;
+        view = LayoutInflater.from(context).inflate(R.layout.movie_list_item, parent, false);
+
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+
+        String movieTitle = null;
+        long movieVoters = 0;
+        String movieRelease = null;
+        String moviePoster = null;
+        float rating_score = 0;
+        movieTitle = movie_list.get(position).title;
+        movieVoters = movie_list.get(position).voteCount;
+        rating_score = (float) (movie_list.get(position).voteAverage / 10) * 5;
+        movieRelease = movie_list.get(position).releaseDate.substring(0, 4);
+        moviePoster = movie_list.get(position).posterPath;
+
+        holder.titleTextView.setText(movieTitle);
+        holder.voterTextView.setText(String.valueOf(movieVoters));
+        holder.releaseTextView.setText(movieRelease);
+        holder.ratingTextView.setText(String.valueOf(rating_score));
+        holder.ratingBar.setRating(rating_score);
+        String url = NetworkUtils.buildMovieUrl(moviePoster, 0).toString();
+        Picasso.with(context).load(url)
+                .placeholder(R.mipmap.ic_launcher)
+                .into(holder.posterImageView);
+    }
+
+    @Override
+    public int getItemCount() {
+        if (null == movie_list) return 0;
+        return movie_list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -108,47 +148,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
             movieDetail.putExtra(MOVIE_ID, String.valueOf(movie_list.get(position).id));
             context.startActivity(movieDetail);
         }
-    }
-
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        View view;
-        view = LayoutInflater.from(context).inflate(R.layout.movie_list_item, parent, false);
-
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-
-        String movieTitle = null;
-        long movieVoters = 0;
-        String movieRelease = null;
-        String moviePoster = null;
-        float rating_score = 0;
-        movieTitle = movie_list.get(position).title;
-        movieVoters = movie_list.get(position).voteCount;
-        rating_score = (float) (movie_list.get(position).voteAverage / 10) * 5;
-        movieRelease = movie_list.get(position).releaseDate.substring(0, 4);
-        moviePoster = movie_list.get(position).posterPath;
-
-        holder.titleTextView.setText(movieTitle);
-        holder.voterTextView.setText(String.valueOf(movieVoters));
-        holder.releaseTextView.setText(movieRelease);
-        holder.ratingTextView.setText(String.valueOf(rating_score));
-        holder.ratingBar.setRating(rating_score);
-        String url = NetworkUtils.buildMovieUrl(moviePoster).toString();
-        Picasso.with(context).load(url)
-                .placeholder(R.mipmap.ic_launcher)
-                .into(holder.posterImageView);
-    }
-
-    @Override
-    public int getItemCount() {
-        if (null == movie_list) return 0;
-        return movie_list.size();
     }
 
 }
