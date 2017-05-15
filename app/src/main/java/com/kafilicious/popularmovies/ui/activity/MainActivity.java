@@ -92,15 +92,17 @@ public class MainActivity extends AppCompatActivity
         toolbar.setTitle("Popular Movies");
         setSupportActionBar(toolbar);
 
+        sortType = SORT_POPULAR;
+
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey("sortPref")
-                    || savedInstanceState.containsKey("pageNo")) {
+                    && savedInstanceState.containsKey("pageNo")) {
                 sortType = savedInstanceState.getString("sortPref");
+                currentPageNo = savedInstanceState.getInt("pageNo");
             }
         }
 
         //Initializing variables for the various views used in the MainActivity
-        sortType = SORT_POPULAR;
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mMovieCountTextView = (TextView) findViewById(R.id.total_movies);
         mPageTextView = (TextView) findViewById(R.id.tv_total_pages);
@@ -439,6 +441,7 @@ public class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("sortPref", sortType);
+        outState.putInt("pageNo", currentPageNo);
     }
 
     public class FetchFavorites extends AsyncTask<Void, Void, Cursor> {

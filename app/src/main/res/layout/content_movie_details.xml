@@ -16,26 +16,23 @@
   limitations under the License.
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/margrinTop_five"
-        android:paddingRight="@dimen/margrinTop_five">
+    android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_backdrop"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
+            android:scaleType="fitXY"
             android:src="@mipmap/ic_launcher" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent_black">
         <TextView
             android:id="@+id/year_details"
             android:layout_width="wrap_content"
@@ -43,6 +40,7 @@
             android:layout_alignParentBottom="true"
             android:paddingTop="@dimen/margrinTop_five"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@android:color/white"
             tools:text="@string/placeHolder_text_year" />
 
         <TextView
@@ -51,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/year_details"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@android:color/white"
             tools:text="Android Lollipop" />
 
             <TextView
@@ -59,6 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
+                android:textColor="@android:color/white"
                 tools:text="@string/placeHolder_text_vote" />
 
         <RatingBar
@@ -79,6 +79,7 @@
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@id/rating_bar_detail"
             android:paddingRight="@dimen/margrinTop_five"
+            android:textColor="@android:color/white"
             tools:text="@string/placeHolder_text_rating" />
 
         <TextView
@@ -88,7 +89,17 @@
             android:layout_above="@id/rating_score_detail"
             android:layout_alignParentEnd="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@android:color/white"
             tools:text="10/10" />
+
+        <Button
+            android:id="@+id/favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/vote_average_details"
+            android:layout_alignParentEnd="true"
+            android:text="@string/button_text" />
+
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

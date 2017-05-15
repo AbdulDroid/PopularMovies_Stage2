@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -17,9 +18,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kafilicious.popularmovies.Database.MovieContract;
 import com.kafilicious.popularmovies.Database.MovieDbHelper;
@@ -70,7 +74,7 @@ public class DetailActivity extends AppCompatActivity {
     RecyclerView reviewRecyclerView, videoRecyclerView;
     SectionPagerAdapter sectionPagerAdapter;
     TextView videoErrorTV, reviewErrorTV;
-    //    Button favoriteButton;
+    Button favoriteButton;
     private ContentValues contentValues = new ContentValues();
     private String selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=?";
     private TextView titleTextView, releaseDateTextView, voteAverageTextView, ratingTextView, voteCountTextView;
@@ -100,6 +104,7 @@ public class DetailActivity extends AppCompatActivity {
         reviewErrorTV = (TextView) findViewById(R.id.review_error_tv);
         ratingBar = (RatingBar) findViewById(R.id.rating_bar_detail);
         backDropImageView = (ImageView) findViewById(R.id.iv_backdrop);
+        favoriteButton = (Button) findViewById(R.id.favorite);
 
         scrollView = (NestedScrollView) findViewById(R.id.nested_scrollView);
         if (scrollView != null) {
@@ -117,11 +122,11 @@ public class DetailActivity extends AppCompatActivity {
 
         tabLayout.setupWithViewPager(viewPager);
 
-//        if (movieIsStored()) {
-//            favoriteButton.setText(R.string.button_text_marked);
-//        } else {
-//            favoriteButton.setText(R.string.button_text);
-//        }
+        if (movieIsStored()) {
+            favoriteButton.setText(R.string.button_text_marked);
+        } else {
+            favoriteButton.setText(R.string.button_text);
+        }
         if (intent != null && intent.hasExtra(MOVIE_TITLE)) {
 
             getSupportActionBar().setTitle(intent.getStringExtra(MOVIE_TITLE) + " (" +
@@ -133,16 +138,16 @@ public class DetailActivity extends AppCompatActivity {
             final String movieVoteCount = intent.getStringExtra(MOVIE_VOTE_COUNT);
             movieOverview = intent.getStringExtra(MOVIE_OVERVIEW);
             final String movieVoteAverage = intent.getStringExtra(MOVIE_VOTE_AVERAGE);
+            final String moviePoster = intent.getStringExtra(MOVIE_POSTER);
             final String movieBackdrop = intent.getStringExtra(MOVIE_BACK_DROP);
 
             selectionArgs = new String[]{String.valueOf(id)};
 
 
             titleTextView.setText(movieTitle);
-            releaseDateTextView.setText(movieRelease);
-            //voteAverageTextView.setText(movieVoteAverage + "/10");
+            releaseDateTextView.setText(movieRelease.substring(0, 4));
+            voteAverageTextView.setText(movieVoteAverage + "/10");
             voteCountTextView.setText(movieVoteCount);
-            //overviewTextView.setText(movieOverview);
             String url2 = NetworkUtils.buildMovieUrl(movieBackdrop, 1).toString();
             Picasso.with(this)
                     .load(url2)
@@ -162,37 +167,37 @@ public class DetailActivity extends AppCompatActivity {
             Log.i("Results", "ID set successful");
 
 
-//            favoriteButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                    if (movieIsStored()) {
-//                        favoriteButton.setText(R.string.button_text);
-//                        int deletedMovie = getContentResolver().delete(MovieContract.MovieEntry
-//                                .CONTENT_URI, selection, selectionArgs);
-//                        Log.i("Movie deleted", String.valueOf(deletedMovie));
-//                        Toast.makeText(DetailActivity.this, movieTitle +
-//                                " has being removed from My Favorites", Toast.LENGTH_LONG).show();
-//                    } else {
-//                        favoriteButton.setText(R.string.button_text_marked);
-//                        ContentValues values = new ContentValues();
-//                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, movieTitle);
-//                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, String.valueOf(id));
-//                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW, movieOverview);
-//                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT, movieVoteCount);
-//                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE, movieVoteAverage);
-//                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH, movieBackdrop);
-//                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSTR_PATH, moviePoster);
-//                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, movieRelease);
-//                        Uri updatedMovie = getContentResolver().insert(MovieContract.MovieEntry
-//                                .CONTENT_URI, values);
-//                        Log.i("Movie Added", String.valueOf(updatedMovie) + " | Title: " + movieTitle);
-//                        Toast.makeText(DetailActivity.this, movieTitle +
-//                                " has being added to My Favorites", Toast.LENGTH_LONG).show();
-//                    }
-//
-//                }
-//            });
+            favoriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (movieIsStored()) {
+                        favoriteButton.setText(R.string.button_text);
+                        int deletedMovie = getContentResolver().delete(MovieContract.MovieEntry
+                                .CONTENT_URI, selection, selectionArgs);
+                        Log.i("Movie deleted", String.valueOf(deletedMovie));
+                        Toast.makeText(DetailActivity.this, movieTitle +
+                                " has being removed from My Favorites", Toast.LENGTH_LONG).show();
+                    } else {
+                        favoriteButton.setText(R.string.button_text_marked);
+                        ContentValues values = new ContentValues();
+                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, movieTitle);
+                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, String.valueOf(id));
+                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW, movieOverview);
+                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT, movieVoteCount);
+                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE, movieVoteAverage);
+                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH, movieBackdrop);
+                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSTR_PATH, moviePoster);
+                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, movieRelease);
+                        Uri updatedMovie = getContentResolver().insert(MovieContract.MovieEntry
+                                .CONTENT_URI, values);
+                        Log.i("Movie Added", String.valueOf(updatedMovie) + " | Title: " + movieTitle);
+                        Toast.makeText(DetailActivity.this, movieTitle +
+                                " has being added to My Favorites", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            });
 
 
         }
