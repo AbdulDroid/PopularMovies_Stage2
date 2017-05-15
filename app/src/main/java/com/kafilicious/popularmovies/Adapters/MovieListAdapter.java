@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.kafilicious.popularmovies.DetailActivity;
 import com.kafilicious.popularmovies.Models.MovieList;
 import com.kafilicious.popularmovies.R;
+import com.kafilicious.popularmovies.ui.activity.DetailActivity;
 import com.kafilicious.popularmovies.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 

@@ -1,19 +1,20 @@
-package com.kafilicious.popularmovies;
+package com.kafilicious.popularmovies.ui.activity;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.ActionBar;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,22 +26,14 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kafilicious.popularmovies.Adapters.ReviewAdapter;
-import com.kafilicious.popularmovies.Adapters.VideoAdapter;
 import com.kafilicious.popularmovies.Database.MovieContract;
 import com.kafilicious.popularmovies.Database.MovieDbHelper;
-import com.kafilicious.popularmovies.Models.ReviewResults;
-import com.kafilicious.popularmovies.Models.VideoResults;
+import com.kafilicious.popularmovies.R;
+import com.kafilicious.popularmovies.ui.fragment.OverviewFragment;
+import com.kafilicious.popularmovies.ui.fragment.ReviewsFragment;
+import com.kafilicious.popularmovies.ui.fragment.TrailersFragment;
 import com.kafilicious.popularmovies.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 
 /*
  * Copyright (C) 2017 Popular Movies, Stage 2
@@ -61,6 +54,7 @@ import java.util.ArrayList;
 public class DetailActivity extends AppCompatActivity {
 
     public static int id;
+    public static String movieTitle = null;
     private static String[] selectionArgs;
     String MOVIE_TITLE = "title";
     String MOVIE_OVERVIEW = "overview";
@@ -73,13 +67,14 @@ public class DetailActivity extends AppCompatActivity {
     String text;
     SQLiteDatabase db;
     MovieDbHelper dbHelper;
-    ReviewAdapter rAdapter;
-    VideoAdapter vAdapter;
+    TabLayout tabLayout;
+    ViewPager viewPager;
+    NestedScrollView scrollView;
+    FloatingActionButton fab;
     RecyclerView reviewRecyclerView, videoRecyclerView;
+    SectionPagerAdapter sectionPagerAdapter;
     TextView videoErrorTV, reviewErrorTV;
     Button favoriteButton;
-    private ArrayList<VideoResults> video_results;
-    private ArrayList<ReviewResults> review_results;
     private ContentValues contentValues = new ContentValues();
     private String selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=?";
     private TextView titleTextView, releaseDateTextView, ratingTextView, voteCountTextView, overviewTextView, voteAverageTextView;
@@ -87,11 +82,7 @@ public class DetailActivity extends AppCompatActivity {
     private RatingBar ratingBar;
     private CollapsingToolbarLayout collapsingToolbar;
 
-    public static boolean isTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK)
-                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,15 +91,13 @@ public class DetailActivity extends AppCompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
 
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         final Intent intent = this.getIntent();
 
-        video_results = new ArrayList<VideoResults>();
-        review_results = new ArrayList<ReviewResults>();
         titleTextView = (TextView) findViewById(R.id.title_details);
         releaseDateTextView = (TextView) findViewById(R.id.year_details);
         ratingTextView = (TextView) findViewById(R.id.rating_score_detail);
@@ -121,31 +110,31 @@ public class DetailActivity extends AppCompatActivity {
         posterImageView = (ImageView) findViewById(R.id.iv_movie_poster_details);
         backDropImageView = (ImageView) findViewById(R.id.iv_backdrop);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        reviewRecyclerView = (RecyclerView) findViewById(R.id.review_rv);
-        videoRecyclerView = (RecyclerView) findViewById(R.id.video_rv);
         favoriteButton = (Button) findViewById(R.id.favorite);
-        reviewRecyclerView.setHasFixedSize(true);
-        videoRecyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        RecyclerView.LayoutManager gridLayout = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
-        reviewRecyclerView.setLayoutManager(layoutManager);
-        if (isTablet(this))
-            videoRecyclerView.setLayoutManager(gridLayout);
-        else
-            videoRecyclerView.setLayoutManager(layoutManager1);
-        rAdapter = new ReviewAdapter(review_results);
-        reviewRecyclerView.setAdapter(rAdapter);
-        vAdapter = new VideoAdapter(this, video_results);
-        videoRecyclerView.setAdapter(vAdapter);
+
+        scrollView = (NestedScrollView) findViewById(R.id.nested_scrollView);
+        if (scrollView != null) {
+            scrollView.setFillViewport(true);
+        }
+
+        tabLayout = (TabLayout) findViewById(R.id.movie_details_tabLayout);
+        viewPager = (ViewPager) findViewById(R.id.movie_details_container);
+
         dbHelper = new MovieDbHelper(this);
+
+        sectionPagerAdapter = new SectionPagerAdapter(getSupportFragmentManager());
+
+        viewPager.setAdapter(sectionPagerAdapter);
+
+        tabLayout.setupWithViewPager(viewPager);
+
         if (movieIsStored()) {
             favoriteButton.setText(R.string.button_text_marked);
         } else {
             favoriteButton.setText(R.string.button_text);
         }
         if (intent != null && intent.hasExtra(MOVIE_TITLE)) {
-            actionBar.setTitle(intent.getStringExtra(MOVIE_TITLE) + " (" +
+            getSupportActionBar().setTitle(intent.getStringExtra(MOVIE_TITLE) + " (" +
                     intent.getStringExtra(MOVIE_RELEASE).substring(0, 4) + ")");
             collapsingToolbar.setTitle(intent.getStringExtra(MOVIE_TITLE) + " (" +
                     intent.getStringExtra(MOVIE_RELEASE).substring(0, 4) + ")");
@@ -158,7 +147,7 @@ public class DetailActivity extends AppCompatActivity {
             collapsingToolbar.setStatusBarScrimColor(getResources()
                     .getColor(R.color.colorPrimaryDark));
 
-            final String movieTitle = intent.getStringExtra(MOVIE_TITLE);
+            movieTitle = intent.getStringExtra(MOVIE_TITLE);
             id = Integer.parseInt(intent.getStringExtra(MOVIE_ID));
             final String movieRelease = intent.getStringExtra(MOVIE_RELEASE);
             final String movieVoteCount = intent.getStringExtra(MOVIE_VOTE_COUNT);
@@ -197,8 +186,7 @@ public class DetailActivity extends AppCompatActivity {
                     intent.getStringExtra(MOVIE_RELEASE).substring(0, 4) + ")";
 
             Log.i("Results", "ID set successful");
-            new FetchVideosDetails().execute(String.valueOf(id));
-            new FetchReviewTask().execute(String.valueOf(id));
+
 
             favoriteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -261,19 +249,6 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    public void showVideoErrorMessage() {
-        videoRecyclerView.setVisibility(View.INVISIBLE);
-        videoErrorTV.setVisibility(View.VISIBLE);
-        videoErrorTV.setText(text);
-    }
-
-    public void showReviewErrorMessage() {
-        reviewRecyclerView.setVisibility(View.INVISIBLE);
-        reviewErrorTV.setVisibility(View.VISIBLE);
-        text = String.format(getResources().getString(R.string.review_error_message), text);
-        reviewErrorTV.setText(text);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -282,95 +257,41 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class FetchVideosDetails extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... params) {
-            String ids = params[0];
+    private class SectionPagerAdapter extends FragmentPagerAdapter {
 
-            try {
-                URL url = NetworkUtils.buildVideoDetailsUrl(ids, 1);
-                String json = NetworkUtils.getResponseFromHttpUrl(url);
-                try {
-                    video_results.clear();
-                    JSONObject object = new JSONObject(json);
-                    JSONArray result = object.getJSONArray("results");
-                    for (int i = 0; i < result.length(); i++) {
-                        JSONObject obj = result.getJSONObject(i);
-
-                        VideoResults results = new VideoResults();
-                        results.type = obj.getString("type");
-                        results.key = obj.getString("key");
-                        results.site = obj.getString("site");
-                        results.name = obj.getString("name");
-                        video_results.add(results);
-//                            Log.i("Results", "video results updated");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
+        public SectionPagerAdapter(FragmentManager fm) {
+            super(fm);
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
-            if (video_results.isEmpty()) {
-                showVideoErrorMessage();
-            } else {
-                vAdapter.setData(video_results);
-                Log.i("Results", "Adapter data updated");
+        public Fragment getItem(int i) {
+            switch (i) {
+                case 0:
+                default:
+                    return OverviewFragment.newInstance();
+                case 1:
+                    return TrailersFragment.newInstance();
+                case 2:
+                    return ReviewsFragment.newInstance();
             }
         }
-    }
-
-    public class FetchReviewTask extends AsyncTask<String, Void, Void> {
 
         @Override
-        protected Void doInBackground(String... params) {
-            String ids1 = params[0];
-            try {
-                URL url = NetworkUtils.buildVideoDetailsUrl(ids1, 2);
-                String json = NetworkUtils.getResponseFromHttpUrl(url);
-                try {
-                    review_results.clear();
-                    JSONObject obj = new JSONObject(json);
-                    JSONArray results = obj.getJSONArray("results");
+        public int getCount() {
+            return 3;
+        }
 
-                    for (int i = 0; i < results.length(); i++) {
-                        JSONObject object = results.getJSONObject(i);
-
-                        ReviewResults result = new ReviewResults();
-                        result.id = object.getString("id");
-                        result.author = object.getString("author");
-                        result.content = object.getString("content");
-                        result.url = object.getString("url");
-                        review_results.add(result);
-                        Log.i("Results", "review results updated");
-                    }
-                } catch (JSONException ex) {
-                    ex.printStackTrace();
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "Overview";
+                case 1:
+                    return "Trailers";
+                case 2:
+                    return "Reviews";
             }
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
-            if (review_results.isEmpty()) {
-                showReviewErrorMessage();
-            } else {
-                rAdapter.setData(review_results);
-                Log.i("Results", "Adapter data updated");
-            }
         }
     }
 }

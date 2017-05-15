@@ -19,12 +19,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.kafilicious.popularmovies.MainActivity">
+    tools:context="com.kafilicious.popularmovies.ui.activity.MainActivity">
     <item
         android:id="@+id/action_about"
         android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/action_about"/>
+        android:title="@string/action_about"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
@@ -32,10 +32,10 @@
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_sort"
-        android:orderInCategory="1"
-        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_sort_white_24dp"
-        android:title="@string/action_sort_by">
+        android:orderInCategory="1"
+        android:title="@string/action_sort_by"
+        app:showAsAction="ifRoom">
         <menu>
             <item
                 android:id="@+id/action_sort_popular"

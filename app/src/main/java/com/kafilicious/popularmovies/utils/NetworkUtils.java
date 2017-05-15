@@ -32,7 +32,7 @@ public class NetworkUtils {
             "https://api.themoviedb.org/3/movie/";
     private static final String API_PAGE = "&page=";
     private static final String API_KEY =
-            "?api_key=";
+            "?api_key=aa6118ed4e99d5f8fcb151923c6ccb13";
     private static final String BASE_IMAGE_URL =
             "http://image.tmdb.org/t/p/";
     private static final String DEFAULT_IMAGE_SIZE =

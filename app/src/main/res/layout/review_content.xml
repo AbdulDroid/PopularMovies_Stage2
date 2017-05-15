@@ -56,13 +56,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:maxLines="4"
+        android:maxLines="6"
         android:paddingEnd="@dimen/padding_left_or_right"
         android:paddingLeft="@dimen/padding_left_or_right"
         android:paddingRight="@dimen/padding_left_or_right"
         android:paddingStart="@dimen/padding_left_or_right"
         android:paddingTop="@dimen/margrinTop_five"
         android:textSize="18sp"
-        tools:text="This movie is awesome and we all know how awesome movies can be
-but lets just this is way better tham most awesome movies you might have seen. so watch " />
+        tools:text="adfhkdjfahdflkd" />
+
+    <TextView
+        android:id="@+id/complete_review_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:paddingEnd="@dimen/padding_left_or_right"
+        android:paddingLeft="@dimen/padding_left_or_right"
+        android:paddingRight="@dimen/padding_left_or_right"
+        android:paddingStart="@dimen/padding_left_or_right"
+        android:paddingTop="@dimen/margrinTop_five"
+        android:textSize="18sp"
+        tools:text="fdjfadlfjiofreioerpier" />
 </LinearLayout>

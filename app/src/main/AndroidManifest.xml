@@ -28,26 +28,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTop">
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailActivity"
-            android:parentActivityName=".MainActivity"
+        <activity
+            android:name=".ui.activity.DetailActivity"
+            android:parentActivityName=".ui.activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.kafilicious.popularmovies.MainActivity"/>
+                android:value="com.kafilicious.popularmovies.ui.activity.MainActivity" />
         </activity>
 
         <provider
-            android:authorities="com.kafilicious.popularmovies"
             android:name=".Database.MoviesContentProvider"
+            android:authorities="com.kafilicious.popularmovies"
             android:exported="false" />
     </application>
 

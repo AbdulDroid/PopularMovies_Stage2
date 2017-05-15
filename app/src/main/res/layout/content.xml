@@ -25,7 +25,7 @@
     android:layout_margin="@dimen/margrinTop_five"
     android:background="#F5F5F5"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.kafilicious.popularmovies.MainActivity"
+    tools:context="com.kafilicious.popularmovies.ui.activity.MainActivity"
     tools:showIn="@layout/activity_main">
 
         <RelativeLayout
@@ -95,7 +95,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/page_no"
                 android:layout_marginLeft="@dimen/margrinTop_five"
                 android:layout_toLeftOf="@id/tv_of"
                 android:background="@drawable/urllinkbackground"
@@ -103,6 +102,7 @@
                 android:paddingLeft="@dimen/padding_left_or_right"
                 android:paddingRight="@dimen/padding_left_or_right"
                 android:paddingTop="@dimen/margrinTop_five"
+                android:text="@string/page_no"
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_size_content" />

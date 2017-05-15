@@ -1,4 +1,4 @@
-package com.kafilicious.popularmovies;
+package com.kafilicious.popularmovies.ui.activity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.kafilicious.popularmovies.Adapters.MovieListAdapter;
 import com.kafilicious.popularmovies.Database.MovieContract;
 import com.kafilicious.popularmovies.Models.MovieList;
+import com.kafilicious.popularmovies.R;
 import com.kafilicious.popularmovies.utils.NetworkUtils;
 
 import org.json.JSONArray;
@@ -95,8 +96,6 @@ public class MainActivity extends AppCompatActivity
             if (savedInstanceState.containsKey("sortPref")
                     || savedInstanceState.containsKey("pageNo")) {
                 sortType = savedInstanceState.getString("sortPref");
-                currentPageNo = Integer.parseInt(savedInstanceState.getString("pageNo"));
-                Log.i(TAG, "SavedInstanceState: " + currentPageNo);
             }
         }
 
@@ -440,7 +439,6 @@ public class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("sortPref", sortType);
-        outState.putString("pageNo", String.valueOf(currentPageNo));
     }
 
     public class FetchFavorites extends AsyncTask<Void, Void, Cursor> {
