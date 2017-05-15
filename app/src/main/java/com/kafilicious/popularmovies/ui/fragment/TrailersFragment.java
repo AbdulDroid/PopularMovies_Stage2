@@ -141,7 +141,6 @@ public class TrailersFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 

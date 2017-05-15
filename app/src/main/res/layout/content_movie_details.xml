@@ -18,13 +18,13 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="@dimen/margrinTop_five"
         android:paddingRight="@dimen/margrinTop_five">
@@ -32,7 +32,7 @@
         <ImageView
             android:id="@+id/iv_backdrop"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:src="@mipmap/ic_launcher" />
 
@@ -46,44 +46,49 @@
             tools:text="@string/placeHolder_text_year" />
 
         <TextView
-            android:id="@+id/tv_movie_title"
+            android:id="@+id/title_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@id/year_details"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             tools:text="Android Lollipop" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="bottom"
-            android:paddingBottom="@dimen/padding_left_or_right"
-            android:paddingTop="@dimen/padding_left_or_right">
-
-            <TextView
-                android:id="@+id/rating_score_detail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/margrinTop_five"
-                tools:text="@string/placeHolder_text_rating" />
-
-            <RatingBar
-                android:id="@+id/rating_bar_detail"
-                style="@style/Base.Widget.AppCompat.RatingBar.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:numStars="5"
-                android:paddingRight="@dimen/margrinTop_five"
-                android:rating="4" />
-
             <TextView
                 android:id="@+id/num_of_votes_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
                 tools:text="@string/placeHolder_text_vote" />
-        </LinearLayout>
+
+        <RatingBar
+            android:id="@+id/rating_bar_detail"
+            style="@style/Base.Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/num_of_votes_detail"
+            android:numStars="5"
+            android:paddingRight="@dimen/margrinTop_five"
+            android:rating="4" />
+
+        <TextView
+            android:id="@+id/rating_score_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/rating_bar_detail"
+            android:paddingRight="@dimen/margrinTop_five"
+            tools:text="@string/placeHolder_text_rating" />
+
+        <TextView
+            android:id="@+id/vote_average_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+            android:layout_above="@id/rating_score_detail"
+            android:layout_alignParentEnd="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            tools:text="10/10" />
     </RelativeLayout>
 
 </LinearLayout>

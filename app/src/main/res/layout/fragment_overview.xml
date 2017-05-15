@@ -8,11 +8,12 @@
         android:id="@+id/tv_movie_overview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margrinTop_five"
-        android:layout_marginRight="@dimen/margrinTop_five"
-        android:layout_marginTop="@dimen/padding_left_or_right"
-        android:textColor="@color/colorAccent"
-        android:textSize="15sp" />
+        android:paddingEnd="@dimen/padding_left_or_right"
+        android:paddingLeft="@dimen/padding_left_or_right"
+        android:paddingRight="@dimen/padding_left_or_right"
+        android:paddingStart="@dimen/padding_left_or_right"
+        android:paddingTop="@dimen/margrinTop_five"
+        android:textSize="18sp" />
 
 
 </LinearLayout>

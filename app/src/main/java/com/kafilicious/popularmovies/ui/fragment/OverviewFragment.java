@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kafilicious.popularmovies.R;
+import com.kafilicious.popularmovies.ui.activity.DetailActivity;
 
 /**
  * Created by Abdulkarim on 5/14/2017.
@@ -18,6 +19,7 @@ import com.kafilicious.popularmovies.R;
 public class OverviewFragment extends Fragment {
 
     TextView overviewTextView;
+    String movieOverview = DetailActivity.movieOverview;
 
     public static OverviewFragment newInstance() {
         OverviewFragment fragment = new OverviewFragment();
@@ -35,7 +37,7 @@ public class OverviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
 
         overviewTextView = (TextView) view.findViewById(R.id.tv_movie_overview);
-
+        getMovieOverview();
         return view;
     }
 
