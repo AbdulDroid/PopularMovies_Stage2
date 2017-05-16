@@ -82,9 +82,9 @@ public class DetailActivity extends AppCompatActivity {
     Button favoriteButton;
     private String selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=?";
     private TextView titleTextView, releaseDateTextView, voteAverageTextView, ratingTextView, voteCountTextView;
-    private TextView titleDetailCard, releaseDetailCard, ratingDetailCard;
+    private TextView titleDetailCard, releaseDetailCard, ratingDetailCard, ratingScoreDetailCard, voteCountDetailCard;
     private ImageView backDropImageView, posterDetailCard;
-    private RatingBar ratingBar;
+    private RatingBar ratingBar, ratingBarPortrait;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +146,9 @@ public class DetailActivity extends AppCompatActivity {
             final String moviePoster = intent.getStringExtra(MOVIE_POSTER);
             final String movieBackdrop = intent.getStringExtra(MOVIE_BACK_DROP);
 
+            getSupportActionBar().setTitle(intent.getStringExtra(MOVIE_TITLE) + " (" +
+                    intent.getStringExtra(MOVIE_RELEASE).substring(0, 4) + ")");
+
             selectionArgs = new String[]{String.valueOf(id)};
 
             titleTextView.setText(movieTitle);
@@ -178,25 +181,40 @@ public class DetailActivity extends AppCompatActivity {
                 titleDetailCard = (TextView) findViewById(R.id.movie_title);
                 releaseDetailCard = (TextView) findViewById(R.id.movie_release_date);
                 ratingDetailCard = (TextView) findViewById(R.id.rating);
+                ratingScoreDetailCard = (TextView) findViewById(R.id.rating_score_details);
+                voteCountDetailCard = (TextView) findViewById(R.id.num_of_votes_details);
+                ratingBarPortrait = (RatingBar) findViewById(R.id.rating_bar_details);
                 myAppBarLayout = (AppBarLayout) findViewById(R.id.myAppbar);
 
+                if (movieIsStored()) {
+                    fab.setImageResource(R.drawable.ic_star_black_24dp);
+                } else {
+                    fab.setImageResource(R.drawable.ic_star_border_black_24dp);
+                }
 
                 myAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                     @Override
                     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
                         if (i == -collapsingToolbarLayout.getHeight() + toolbar.getHeight()) {
+                            collapsingToolbarLayout.setCollapsedTitleTextColor(getResources()
+                                    .getColor(android.R.color.white));
                             layoutDetail.setVisibility(View.VISIBLE);
-                            collapsingToolbarLayout.setTitle(intent.getStringExtra(MOVIE_TITLE) + " (" +
-                                    intent.getStringExtra(MOVIE_RELEASE).substring(0, 4) + ")");
-                        } else
+                        } else {
                             layoutDetail.setVisibility(View.GONE);
-                        collapsingToolbarLayout.setTitle(" ");
+                            collapsingToolbarLayout.setExpandedTitleColor(getResources()
+                                    .getColor(R.color.transparent));
+                        }
                     }
                 });
 
                 titleDetailCard.setText(movieTitle);
                 releaseDetailCard.setText(movieRelease);
                 ratingDetailCard.setText(movieVoteAverage + "/10");
+                voteCountDetailCard.setText(movieVoteCount);
+                ratingScoreDetailCard.setText(rating);
+                ratingBarPortrait.setRating((float) voteAverage);
+                ratingBarPortrait.setStepSize((float) 0.1);
+                ratingBarPortrait.setNumStars(5);
                 String url = NetworkUtils.buildMovieUrl(moviePoster, 0).toString();
                 Picasso.with(this)
                         .load(url)

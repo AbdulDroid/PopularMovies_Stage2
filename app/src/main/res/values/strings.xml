@@ -30,6 +30,9 @@
     <string name="vote_average">Vote Average</string>
     <string name="button_text">Mark As Favorite</string>
     <string name="button_text_marked">Marked as Favorite</string>
+    <string name="title_movie_details">Title:</string>
+    <string name="release_date_movie_details">Release Date:</string>
+    <string name="rating_movie_details">Rating:</string>
     <string name="rating">Rating</string>
     <string name="trailer_text">Official Trailers/Trailers or Teasers</string>
     <string name="review_text">Reviews</string>

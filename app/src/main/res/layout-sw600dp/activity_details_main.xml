@@ -28,14 +28,14 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/myAppbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="@dimen/appbar_height"
+        android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
@@ -44,9 +44,9 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:layout_collapseMode="parallax">
 
                 <include layout="@layout/content_movie_details_appbar" />
 
@@ -62,59 +62,26 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_gravity="fill_vertical"
+        android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:id="@+id/layout_detail_card"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
             <include layout="@layout/content_movie_details" />
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:orientation="vertical">
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/movie_details_tabLayout"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="bottom"
-                android:background="@android:color/transparent"
-                app:tabGravity="fill"
-                app:tabIndicatorColor="@color/colorAccent"
-                app:tabIndicatorHeight="2dp"
-                app:tabMode="fixed"
-                app:tabTextAppearance="@style/TextAppearance.Design.Tab"
-                app:tabTextColor="@android:color/black" />
-
-            <android.support.v4.widget.NestedScrollView
-                android:id="@+id/nested_scrollView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/movie_details_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </android.support.v4.widget.NestedScrollView>
-        </LinearLayout>
-    </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        style="@style/Widget.Design.FloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@drawable/ic_star_border_black_24dp"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
         app:layout_anchor="@id/myAppbar"
         app:layout_anchorGravity="bottom|right|end" />
 

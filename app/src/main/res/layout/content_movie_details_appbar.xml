@@ -32,7 +32,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent_black">
+        android:background="@color/transparent_black"
+        android:paddingBottom="@dimen/height_width_thirty">
 
         <TextView
             android:id="@+id/year_details"
@@ -40,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:paddingTop="@dimen/margrinTop_five"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@android:color/white"
             tools:text="@string/placeHolder_text_year" />
 
@@ -49,7 +50,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@id/year_details"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textColor="@android:color/white"
             tools:text="Android Lollipop" />
 
@@ -89,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/rating_score_detail"
             android:layout_alignParentEnd="true"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@android:color/white"
             tools:text="10/10" />
 
