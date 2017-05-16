@@ -22,7 +22,7 @@
     android:id="@+id/video_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <!--tools:showIn="@layout/content_movie_details"-->
+    <!--tools:showIn="@layout/content_movie_details_appbar"-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

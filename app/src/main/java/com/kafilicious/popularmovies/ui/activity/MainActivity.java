@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
@@ -70,11 +71,15 @@ public class MainActivity extends AppCompatActivity
     private static final String SORT_POPULAR = "popular";
     private static final String SORT_RATED = "top_rated";
     private static final String SORT_BY_FAVORITES = "favorites";
+    private static final String LIST_STATE_KEY = "key_position";
     int currentPageNo = 1, totalPageNo = 1;
     long totalPages = 0;
     long totalResults = 0;
     String sortType = null;
     MovieListAdapter adapter;
+    Parcelable mListState = null;
+    Bundle stateBundle = null;
+    RecyclerView.LayoutManager layoutManager;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private List<MovieList> movie_list;
@@ -127,7 +132,8 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setHasFixedSize(true);
         //Setting the layout manager for the RecyclerView
         final int columns = getResources().getInteger(R.integer.grid_columns);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, columns, LinearLayoutManager.VERTICAL, false);
+        layoutManager = new GridLayoutManager(this, columns,
+                LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         //Setting the adapter for the RecyclerView
         adapter = new MovieListAdapter(movie_list);
@@ -146,6 +152,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onPause() {
+        mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        super.onPause();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         if (prefs.getBoolean("firstrun", true)) {
@@ -153,6 +165,8 @@ public class MainActivity extends AppCompatActivity
             // using the following line to edit/commit prefs
             prefs.edit().putBoolean("firstrun", false).commit();
         }
+        if (sortType == SORT_BY_FAVORITES)
+            fetchMovies(sortType, currentPageNo);
     }
 
     @Override
@@ -179,10 +193,13 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public List<MovieList> loadInBackground() {
-                String urlQuery = args.getString(SEARCH_QUERY_URL_EXTRA);
-                if (urlQuery == null || TextUtils.isEmpty(urlQuery)) {
-                    Log.i(TAG, "Loader: Request URL is null or is empty");
-                    return null;
+                String urlQuery = null;
+                if (args != null) {
+                    urlQuery = args.getString(SEARCH_QUERY_URL_EXTRA);
+                    if (urlQuery == null || TextUtils.isEmpty(urlQuery)) {
+                        Log.i(TAG, "Loader: Request URL is null or is empty");
+                        return null;
+                    }
                 }
 
                 try {
@@ -243,6 +260,8 @@ public class MainActivity extends AppCompatActivity
             showViews();
             setTextViews(totalPages, totalResults);
             adapter.setMovieData(data);
+            if (mListState != null)
+                mRecyclerView.getLayoutManager().onRestoreInstanceState(mListState);
         } else {
 
         }
@@ -439,9 +458,21 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putString("sortPref", sortType);
         outState.putInt("pageNo", currentPageNo);
+        mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(LIST_STATE_KEY, mListState);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle state) {
+        if (state != null) {
+            sortType = state.getString("sortPref");
+            currentPageNo = state.getInt("pageNo");
+            mListState = state.getParcelable(LIST_STATE_KEY);
+            super.onRestoreInstanceState(state);
+        }
     }
 
     public class FetchFavorites extends AsyncTask<Void, Void, Cursor> {
@@ -507,6 +538,9 @@ public class MainActivity extends AppCompatActivity
 
                     movie_list = movieList_from_cursor;
                     adapter.setMovieData(movie_list);
+                    if (mListState != null) {
+                        mRecyclerView.getLayoutManager().onRestoreInstanceState(mListState);
+                    }
                     updateUI();
                     hideViews();
                     mMovieCountTextView.setText(String.valueOf(movie_list.size()));

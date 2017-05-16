@@ -2,10 +2,13 @@ package com.kafilicious.popularmovies.ui.activity;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,13 +17,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,14 +74,16 @@ public class DetailActivity extends AppCompatActivity {
     ViewPager viewPager;
     NestedScrollView scrollView;
     FloatingActionButton fab;
-    RecyclerView reviewRecyclerView, videoRecyclerView;
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    LinearLayout layoutDetail;
+    AppBarLayout myAppBarLayout;
     SectionPagerAdapter sectionPagerAdapter;
     TextView videoErrorTV, reviewErrorTV;
     Button favoriteButton;
-    private ContentValues contentValues = new ContentValues();
     private String selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=?";
     private TextView titleTextView, releaseDateTextView, voteAverageTextView, ratingTextView, voteCountTextView;
-    private ImageView backDropImageView;
+    private TextView titleDetailCard, releaseDetailCard, ratingDetailCard;
+    private ImageView backDropImageView, posterDetailCard;
     private RatingBar ratingBar;
 
     @Override
@@ -106,6 +111,9 @@ public class DetailActivity extends AppCompatActivity {
         backDropImageView = (ImageView) findViewById(R.id.iv_backdrop);
         favoriteButton = (Button) findViewById(R.id.favorite);
 
+        int orientation = this.getResources().getConfiguration().orientation;
+
+
         scrollView = (NestedScrollView) findViewById(R.id.nested_scrollView);
         if (scrollView != null) {
             scrollView.setFillViewport(true);
@@ -129,9 +137,6 @@ public class DetailActivity extends AppCompatActivity {
         }
         if (intent != null && intent.hasExtra(MOVIE_TITLE)) {
 
-            getSupportActionBar().setTitle(intent.getStringExtra(MOVIE_TITLE) + " (" +
-                    intent.getStringExtra(MOVIE_RELEASE).substring(0, 4) + ")");
-
             movieTitle = intent.getStringExtra(MOVIE_TITLE);
             id = Integer.parseInt(intent.getStringExtra(MOVIE_ID));
             final String movieRelease = intent.getStringExtra(MOVIE_RELEASE);
@@ -142,7 +147,6 @@ public class DetailActivity extends AppCompatActivity {
             final String movieBackdrop = intent.getStringExtra(MOVIE_BACK_DROP);
 
             selectionArgs = new String[]{String.valueOf(id)};
-
 
             titleTextView.setText(movieTitle);
             releaseDateTextView.setText(movieRelease.substring(0, 4));
@@ -164,41 +168,107 @@ public class DetailActivity extends AppCompatActivity {
             text = intent.getStringExtra(MOVIE_TITLE) + "(" +
                     intent.getStringExtra(MOVIE_RELEASE).substring(0, 4) + ")";
 
-            Log.i("Results", "ID set successful");
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                favoriteButton.setVisibility(View.GONE);
+                fab = (FloatingActionButton) findViewById(R.id.fab);
+                collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
+                layoutDetail = (LinearLayout) findViewById(R.id.layout_detail_card);
+                layoutDetail.setVisibility(View.GONE);
+                posterDetailCard = (ImageView) findViewById(R.id.poster_detail_card);
+                titleDetailCard = (TextView) findViewById(R.id.movie_title);
+                releaseDetailCard = (TextView) findViewById(R.id.movie_release_date);
+                ratingDetailCard = (TextView) findViewById(R.id.rating);
+                myAppBarLayout = (AppBarLayout) findViewById(R.id.myAppbar);
 
 
-            favoriteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (movieIsStored()) {
-                        favoriteButton.setText(R.string.button_text);
-                        int deletedMovie = getContentResolver().delete(MovieContract.MovieEntry
-                                .CONTENT_URI, selection, selectionArgs);
-                        Log.i("Movie deleted", String.valueOf(deletedMovie));
-                        Toast.makeText(DetailActivity.this, movieTitle +
-                                " has being removed from My Favorites", Toast.LENGTH_LONG).show();
-                    } else {
-                        favoriteButton.setText(R.string.button_text_marked);
-                        ContentValues values = new ContentValues();
-                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, movieTitle);
-                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, String.valueOf(id));
-                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW, movieOverview);
-                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT, movieVoteCount);
-                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE, movieVoteAverage);
-                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH, movieBackdrop);
-                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSTR_PATH, moviePoster);
-                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, movieRelease);
-                        Uri updatedMovie = getContentResolver().insert(MovieContract.MovieEntry
-                                .CONTENT_URI, values);
-                        Log.i("Movie Added", String.valueOf(updatedMovie) + " | Title: " + movieTitle);
-                        Toast.makeText(DetailActivity.this, movieTitle +
-                                " has being added to My Favorites", Toast.LENGTH_LONG).show();
+                myAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                    @Override
+                    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+                        if (i == -collapsingToolbarLayout.getHeight() + toolbar.getHeight()) {
+                            layoutDetail.setVisibility(View.VISIBLE);
+                            collapsingToolbarLayout.setTitle(intent.getStringExtra(MOVIE_TITLE) + " (" +
+                                    intent.getStringExtra(MOVIE_RELEASE).substring(0, 4) + ")");
+                        } else
+                            layoutDetail.setVisibility(View.GONE);
+                        collapsingToolbarLayout.setTitle(" ");
                     }
+                });
 
-                }
-            });
+                titleDetailCard.setText(movieTitle);
+                releaseDetailCard.setText(movieRelease);
+                ratingDetailCard.setText(movieVoteAverage + "/10");
+                String url = NetworkUtils.buildMovieUrl(moviePoster, 0).toString();
+                Picasso.with(this)
+                        .load(url)
+                        .into(posterDetailCard);
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
+                        if (movieIsStored()) {
+                            fab.setImageResource(R.drawable.ic_star_border_black_24dp);
+                            int deletedMovie = getContentResolver().delete(MovieContract.MovieEntry
+                                    .CONTENT_URI, selection, selectionArgs);
+                            Log.i("Movie deleted", String.valueOf(deletedMovie));
+                            Toast.makeText(DetailActivity.this, movieTitle +
+                                    " has being removed from My Favorites", Toast.LENGTH_LONG).show();
+                        } else {
+                            fab.setImageResource(R.drawable.ic_star_black_24dp);
+                            ContentValues values = new ContentValues();
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, movieTitle);
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, String.valueOf(id));
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW, movieOverview);
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT, movieVoteCount);
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE, movieVoteAverage);
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH, movieBackdrop);
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSTR_PATH, moviePoster);
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, movieRelease);
+                            Uri updatedMovie = getContentResolver().insert(MovieContract.MovieEntry
+                                    .CONTENT_URI, values);
+                            Log.i("Movie Added ", String.valueOf(updatedMovie) + " | Title: " + movieTitle);
+                            Toast.makeText(DetailActivity.this, movieTitle +
+                                    " has being added to My Favorites", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+
+            } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                favoriteButton.setVisibility(View.VISIBLE);
+                favoriteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (movieIsStored()) {
+                            favoriteButton.setText(R.string.button_text);
+                            int deletedMovie = getContentResolver().delete(MovieContract.MovieEntry
+                                    .CONTENT_URI, selection, selectionArgs);
+                            Log.i("Movie deleted", String.valueOf(deletedMovie));
+                            Toast.makeText(DetailActivity.this, movieTitle +
+                                    " has being removed from My Favorites", Toast.LENGTH_LONG).show();
+                        } else {
+                            favoriteButton.setText(R.string.button_text_marked);
+                            ContentValues values = new ContentValues();
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, movieTitle);
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, String.valueOf(id));
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW, movieOverview);
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT, movieVoteCount);
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE, movieVoteAverage);
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH, movieBackdrop);
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSTR_PATH, moviePoster);
+                            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, movieRelease);
+                            Uri updatedMovie = getContentResolver().insert(MovieContract.MovieEntry
+                                    .CONTENT_URI, values);
+                            Log.i("Movie Added", String.valueOf(updatedMovie) + " | Title: " + movieTitle);
+                            Toast.makeText(DetailActivity.this, movieTitle +
+                                    " has being added to My Favorites", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+            }
+
+            Log.i("Results", "ID set successful");
 
         }
     }

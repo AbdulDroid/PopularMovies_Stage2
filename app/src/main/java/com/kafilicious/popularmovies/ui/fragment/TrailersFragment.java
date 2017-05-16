@@ -76,10 +76,6 @@ public class TrailersFragment extends Fragment {
         else
             trailerRecyclerView.setLayoutManager(layoutManager1);
 
-        vAdapter = new VideoAdapter(getActivity(), videosList);
-        trailerRecyclerView.setAdapter(vAdapter);
-
-
         movieId = DetailActivity.id;
         new FetchVideosDetails().execute(String.valueOf(movieId));
         return view;
@@ -152,6 +148,8 @@ public class TrailersFragment extends Fragment {
                 showVideoErrorMessage();
             } else {
                 showData();
+                vAdapter = new VideoAdapter(getActivity(), videosList);
+                trailerRecyclerView.setAdapter(vAdapter);
                 vAdapter.setData(videosList);
                 Log.i("Results", "Adapter data updated");
             }

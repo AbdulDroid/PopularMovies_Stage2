@@ -62,8 +62,6 @@ public class ReviewsFragment extends Fragment {
         reviewRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         reviewRecyclerView.setLayoutManager(layoutManager);
-        rAdapter = new ReviewAdapter(getActivity(), reviewList);
-        reviewRecyclerView.setAdapter(rAdapter);
 
         movieId = DetailActivity.id;
         new FetchReviewTask().execute(String.valueOf(movieId));
@@ -140,6 +138,8 @@ public class ReviewsFragment extends Fragment {
                 showReviewErrorMessage();
             } else {
                 showData();
+                rAdapter = new ReviewAdapter(getActivity(), reviewList);
+                reviewRecyclerView.setAdapter(rAdapter);
                 rAdapter.setData(reviewList);
                 Log.i("Results", "Adapter data updated");
             }
