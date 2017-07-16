@@ -1,9 +1,9 @@
-# Popular Movies Stage 1
+# Popular Movies Stage 2
 ## ALC/Udacity 2nd Project
 ### Project Overview
-Most of us can relate to kicking back on the couch and enjoying a movie with friends and family. In this project, you’ll build an app to allow users to discover the most popular movies playing. We will split the development of this app in two stages. First, let's talk about stage 1. In this stage you’ll build the core experience of your movies app.
+Most of us can relate to kicking back on the couch and enjoying a movie with friends and family. In this project, you’ll build an app to allow users to discover the most popular movies playing. We will split the development of this app in two stages. First, let's talk about stage 2. In this stage you’ll build the core experience of your movies app.
  
-### Your app will:
+### The app will:
 
 Present the user with a grid arrangement of movie posters upon launch.
 Allow your user to change sort order via a setting:
