@@ -63,18 +63,19 @@
         android:paddingStart="@dimen/padding_left_or_right"
         android:paddingTop="@dimen/margrinTop_five"
         android:textSize="18sp"
-        tools:text="adfhkdjfahdflkd" />
+        tools:text="Associate Android Developer Fast Track" />
 
     <TextView
         android:id="@+id/complete_review_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:focusable="true"
         android:paddingEnd="@dimen/padding_left_or_right"
         android:paddingLeft="@dimen/padding_left_or_right"
         android:paddingRight="@dimen/padding_left_or_right"
         android:paddingStart="@dimen/padding_left_or_right"
         android:paddingTop="@dimen/margrinTop_five"
         android:textSize="18sp"
-        tools:text="fdjfadlfjiofreioerpier" />
+        tools:text="This course is designed to help guide intending applicants for the Google Associate Android Developer Certification" />
 </LinearLayout>

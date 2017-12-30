@@ -23,7 +23,7 @@
     <string name="placeHolder_text_year">2015</string>
     <string name="placeHolder_text_vote">(300)</string>
     <string name="placeHolder_text_rating">4.0</string>
-    <string name="authors_name">Dummy Name</string>
+    <string name="authors_name">Udacity.com</string>
 
     <!-- String Resources for the DetailsActivity class-->
     <string name="overview">Plot Synopsis</string>
