@@ -2,9 +2,9 @@ package com.kafilicious.popularmovies.utils;
 
 import android.content.Context;
 
-import com.kafilicious.popularmovies.Models.MovieList;
-import com.kafilicious.popularmovies.Models.MoviesResponse;
-import com.kafilicious.popularmovies.Adapters.MovieListAdapter;
+import com.kafilicious.popularmovies.models.MovieList;
+import com.kafilicious.popularmovies.models.MoviesResponse;
+import com.kafilicious.popularmovies.adapters.MovieListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;

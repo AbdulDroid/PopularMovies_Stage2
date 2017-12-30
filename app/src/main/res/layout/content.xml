@@ -16,18 +16,20 @@
   limitations under the License.
 -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/margrinTop_five"
-    android:background="#F5F5F5"
+    android:fillViewport="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.kafilicious.popularmovies.ui.activity.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <RelativeLayout
             android:id="@+id/info"
             android:layout_width="match_parent"
@@ -39,7 +41,7 @@
                 android:layout_width="@dimen/height_width_fifteen"
                 android:layout_height="@dimen/height_width_fifteen"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/padding_left_or_right"
+                android:layout_marginStart="@dimen/padding_left_or_right"
                 android:src="@drawable/ic_video_library_black_24dp" />
 
             <TextView
@@ -47,8 +49,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/margrinTop_five"
-                android:layout_toRightOf="@id/icon"
+                android:layout_marginStart="@dimen/margrinTop_five"
+                android:layout_toEndOf="@id/icon"
                 android:textColor="@android:color/tertiary_text_dark"
                 android:textSize="@dimen/text_size_content"
                 android:textStyle="bold" />
@@ -57,9 +59,9 @@
                 android:id="@+id/right_arrow"
                 android:layout_width="@dimen/height_width_thirty"
                 android:layout_height="@dimen/height_width_thirty"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="@dimen/margrinTop_five"
+                android:layout_marginStart="@dimen/margrinTop_five"
                 android:src="@drawable/ic_chevron_right_black_24dp" />
 
             <TextView
@@ -67,8 +69,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="@dimen/margrinTop_five"
-                android:layout_toLeftOf="@id/right_arrow"
+                android:layout_marginStart="@dimen/margrinTop_five"
+                android:layout_toStartOf="@id/right_arrow"
                 android:background="@drawable/urllinkbackground"
                 android:paddingBottom="@dimen/margrinTop_five"
                 android:paddingLeft="@dimen/padding_left_or_right"
@@ -82,8 +84,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="@dimen/margrinTop_five"
-                android:layout_toLeftOf="@id/tv_total_pages"
+                android:layout_marginStart="@dimen/margrinTop_five"
+                android:layout_toStartOf="@id/tv_total_pages"
                 android:text="@string/of"
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
@@ -95,8 +97,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="@dimen/margrinTop_five"
-                android:layout_toLeftOf="@id/tv_of"
+                android:layout_marginStart="@dimen/margrinTop_five"
+                android:layout_toStartOf="@id/tv_of"
                 android:background="@drawable/urllinkbackground"
                 android:paddingBottom="@dimen/margrinTop_five"
                 android:paddingLeft="@dimen/padding_left_or_right"
@@ -112,30 +114,26 @@
                 android:layout_width="@dimen/height_width_thirty"
                 android:layout_height="@dimen/height_width_thirty"
                 android:layout_centerInParent="true"
-                android:layout_toLeftOf="@id/tv_page_no"
+                android:layout_toStartOf="@id/tv_page_no"
                 android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <ProgressBar
+            android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true">
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:backgroundTint="@color/grey"
-                android:visibility="gone" />
-
-        </RelativeLayout>
+            android:layout_centerInParent="true"
+            android:backgroundTint="@color/grey"
+            android:visibility="visible" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_movie_posters"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:background="@color/recycler_background"
             android:layout_below="@id/info" />
+    </RelativeLayout>
 
-</RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

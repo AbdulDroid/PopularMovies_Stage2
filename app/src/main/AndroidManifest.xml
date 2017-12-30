@@ -48,7 +48,7 @@
         </activity>
 
         <provider
-            android:name=".Database.MoviesContentProvider"
+            android:name=".database.MoviesContentProvider"
             android:authorities="com.kafilicious.popularmovies"
             android:exported="false" />
     </application>

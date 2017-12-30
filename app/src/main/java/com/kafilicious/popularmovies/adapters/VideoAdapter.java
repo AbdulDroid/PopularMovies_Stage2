@@ -1,4 +1,4 @@
-package com.kafilicious.popularmovies.Adapters;
+package com.kafilicious.popularmovies.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kafilicious.popularmovies.Models.VideoResults;
+import com.kafilicious.popularmovies.models.VideoResults;
 import com.kafilicious.popularmovies.R;
 import com.kafilicious.popularmovies.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;

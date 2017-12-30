@@ -1,4 +1,4 @@
-package com.kafilicious.popularmovies.Models;
+package com.kafilicious.popularmovies.models;
 
 import java.util.List;
 

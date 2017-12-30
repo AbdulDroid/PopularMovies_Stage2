@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.kafilicious.popularmovies.Adapters.ReviewAdapter;
-import com.kafilicious.popularmovies.Models.ReviewResults;
+import com.kafilicious.popularmovies.adapters.ReviewAdapter;
+import com.kafilicious.popularmovies.models.ReviewResults;
 import com.kafilicious.popularmovies.R;
 import com.kafilicious.popularmovies.ui.activity.DetailActivity;
 import com.kafilicious.popularmovies.utils.NetworkUtils;

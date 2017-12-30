@@ -1,10 +1,10 @@
-package com.kafilicious.popularmovies.Database;
+package com.kafilicious.popularmovies.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.kafilicious.popularmovies.Database.MovieContract.MovieEntry;
+import com.kafilicious.popularmovies.database.MovieContract.MovieEntry;
 
 /*
  * Copyright (C) 2017 Popular Movies, Stage 2

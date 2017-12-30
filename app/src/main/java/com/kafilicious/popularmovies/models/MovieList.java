@@ -1,4 +1,4 @@
-package com.kafilicious.popularmovies.Models;
+package com.kafilicious.popularmovies.models;
 
 /*
  * Copyright (C) 2017 Popular Movies, Stage 2

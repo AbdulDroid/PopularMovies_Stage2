@@ -1,4 +1,4 @@
-package com.kafilicious.popularmovies.Models;
+package com.kafilicious.popularmovies.models;
 
 import java.io.Serializable;
 
@@ -18,12 +18,9 @@ import java.io.Serializable;
  * limitations under the License.
 */
 
-public class VideoResults implements Serializable {
-
+public class ReviewResults implements Serializable {
     public String id;
-    public String key;
-    public String name;
-    public String site;
-    public int size;
-    public String type;
+    public String author;
+    public String content;
+    public String url;
 }

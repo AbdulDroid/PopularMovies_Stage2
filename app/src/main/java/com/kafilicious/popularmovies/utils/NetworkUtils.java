@@ -2,6 +2,8 @@ package com.kafilicious.popularmovies.utils;
 
 import android.util.Log;
 
+import com.kafilicious.popularmovies.BuildConfig;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -67,7 +69,7 @@ public class NetworkUtils {
     }
 
     public static URL buildUrl(String sort, int page){
-        String address = BASE_API_URL + sort + API_KEY + API_PAGE + page;
+        String address = BASE_API_URL + sort + API_KEY + BuildConfig.API_KEY + API_PAGE + page;
         return buildUrl(address);
     }
 
@@ -75,9 +77,9 @@ public class NetworkUtils {
     public static URL buildVideoDetailsUrl(String id, int task){
         String Url = null;
         if(task == 1)
-            Url = BASE_API_URL + id + "/videos" + API_KEY + VIDEO_URL_TAG;
+            Url = BASE_API_URL + id + "/videos" + API_KEY + BuildConfig.API_KEY + VIDEO_URL_TAG;
         else if (task == 2)
-            Url = BASE_API_URL + id + "/reviews" + API_KEY + REVIEW_URL_TAG;
+            Url = BASE_API_URL + id + "/reviews" + API_KEY + BuildConfig.API_KEY +  REVIEW_URL_TAG;
         return buildUrl(Url);
     }
 

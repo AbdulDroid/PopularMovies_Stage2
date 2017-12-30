@@ -1,4 +1,4 @@
-package com.kafilicious.popularmovies.Database;
+package com.kafilicious.popularmovies.database;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -12,8 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import static com.kafilicious.popularmovies.Database.MovieContract.MovieEntry.CONTENT_URI;
-import static com.kafilicious.popularmovies.Database.MovieContract.MovieEntry.TABLE_ONE_NAME;
+import static com.kafilicious.popularmovies.database.MovieContract.MovieEntry.CONTENT_URI;
+import static com.kafilicious.popularmovies.database.MovieContract.MovieEntry.TABLE_ONE_NAME;
 
 /**
  * Created by Abdulkarim on 5/13/2017.

@@ -16,8 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.kafilicious.popularmovies.Adapters.VideoAdapter;
-import com.kafilicious.popularmovies.Models.VideoResults;
+import com.kafilicious.popularmovies.adapters.VideoAdapter;
+import com.kafilicious.popularmovies.models.VideoResults;
 import com.kafilicious.popularmovies.R;
 import com.kafilicious.popularmovies.ui.activity.DetailActivity;
 import com.kafilicious.popularmovies.utils.NetworkUtils;
@@ -45,8 +45,7 @@ public class TrailersFragment extends Fragment {
     List<VideoResults> videosList;
 
     public static TrailersFragment newInstance() {
-        TrailersFragment fragment = new TrailersFragment();
-        return fragment;
+         return new TrailersFragment();
     }
 
     public static boolean isTablet(Context context) {
@@ -64,9 +63,9 @@ public class TrailersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_trailers, container, false);
-        trailersProgressBar = (ProgressBar) view.findViewById(R.id.progressbar_trailer);
-        errorMessageTextView = (TextView) view.findViewById(R.id.video_error_tv);
-        trailerRecyclerView = (RecyclerView) view.findViewById(R.id.video_rv);
+        trailersProgressBar = view.findViewById(R.id.progressbar_trailer);
+        errorMessageTextView = view.findViewById(R.id.video_error_tv);
+        trailerRecyclerView = view.findViewById(R.id.video_rv);
         trailerRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         RecyclerView.LayoutManager gridLayout = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
@@ -111,7 +110,7 @@ public class TrailersFragment extends Fragment {
         @Override
         protected Void doInBackground(String... params) {
             String ids = params[0];
-            videosList = new ArrayList<VideoResults>();
+            videosList = new ArrayList<>();
 
             try {
                 URL url = NetworkUtils.buildVideoDetailsUrl(ids, 1);

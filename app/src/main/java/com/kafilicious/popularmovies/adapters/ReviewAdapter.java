@@ -1,4 +1,4 @@
-package com.kafilicious.popularmovies.Adapters;
+package com.kafilicious.popularmovies.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kafilicious.popularmovies.Models.ReviewResults;
+import com.kafilicious.popularmovies.models.ReviewResults;
 import com.kafilicious.popularmovies.R;
 
 import java.util.List;

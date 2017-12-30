@@ -28,8 +28,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kafilicious.popularmovies.Database.MovieContract;
-import com.kafilicious.popularmovies.Database.MovieDbHelper;
+import com.kafilicious.popularmovies.database.MovieContract;
+import com.kafilicious.popularmovies.database.MovieDbHelper;
 import com.kafilicious.popularmovies.R;
 import com.kafilicious.popularmovies.ui.fragment.OverviewFragment;
 import com.kafilicious.popularmovies.ui.fragment.ReviewsFragment;

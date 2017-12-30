@@ -31,9 +31,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kafilicious.popularmovies.Adapters.MovieListAdapter;
-import com.kafilicious.popularmovies.Database.MovieContract;
-import com.kafilicious.popularmovies.Models.MovieList;
+import com.kafilicious.popularmovies.adapters.MovieListAdapter;
+import com.kafilicious.popularmovies.database.MovieContract;
+import com.kafilicious.popularmovies.models.MovieList;
 import com.kafilicious.popularmovies.R;
 import com.kafilicious.popularmovies.utils.NetworkUtils;
 
@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity
     String sortType = null;
     MovieListAdapter adapter;
     Parcelable mListState = null;
-    Bundle stateBundle = null;
     RecyclerView.LayoutManager layoutManager;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Popular Movies");
         setSupportActionBar(toolbar);
 
@@ -108,19 +107,19 @@ public class MainActivity extends AppCompatActivity
         }
 
         //Initializing variables for the various views used in the MainActivity
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        mMovieCountTextView = (TextView) findViewById(R.id.total_movies);
-        mPageTextView = (TextView) findViewById(R.id.tv_total_pages);
+        mProgressBar = findViewById(R.id.progress_bar);
+        mMovieCountTextView = findViewById(R.id.total_movies);
+        mPageTextView = findViewById(R.id.tv_total_pages);
         mPageTextView.setVisibility(View.GONE);
-        rightArrow = (ImageView) findViewById(R.id.right_arrow);
+        rightArrow = findViewById(R.id.right_arrow);
         rightArrow.setOnClickListener(this);
-        leftArrow = (ImageView) findViewById(R.id.left_arrow);
+        leftArrow = findViewById(R.id.left_arrow);
         leftArrow.setVisibility(View.GONE);
         leftArrow.setOnClickListener(this);
-        ofTextView = (TextView) findViewById(R.id.tv_of);
+        ofTextView = findViewById(R.id.tv_of);
         ofTextView.setVisibility(View.GONE);
-        mCurrentPageTextView = (TextView) findViewById(R.id.tv_page_no);
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.activity_main);
+        mCurrentPageTextView = findViewById(R.id.tv_page_no);
+        coordinatorLayout = findViewById(R.id.activity_main);
         mCurrentPageTextView.setText(String.valueOf(currentPageNo));
         if (currentPageNo == 1)
             leftArrow.setVisibility(View.GONE);
@@ -128,7 +127,7 @@ public class MainActivity extends AppCompatActivity
             leftArrow.setVisibility(View.VISIBLE);
 
         //Setting the RecyclerView to a fixed size
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_posters);
+        mRecyclerView = findViewById(R.id.rv_movie_posters);
         mRecyclerView.setHasFixedSize(true);
         //Setting the layout manager for the RecyclerView
         final int columns = getResources().getInteger(R.integer.grid_columns);
@@ -139,14 +138,12 @@ public class MainActivity extends AppCompatActivity
         adapter = new MovieListAdapter(movie_list);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(adapter);
-
+        mRecyclerView.setNestedScrollingEnabled(false);
         fetchMovies(sortType, currentPageNo);
-        int loaderId = THEMOVIEDB_SEARCH_LOADER;
 
-        Bundle bundleForLoader = null;
         LoaderCallbacks<List<MovieList>> callback = MainActivity.this;
 
-        getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
+        getSupportLoaderManager().initLoader(THEMOVIEDB_SEARCH_LOADER, null, callback);
 
         prefs = getSharedPreferences("com.kafilicious.popularmovies", MODE_PRIVATE);
     }
@@ -163,9 +160,9 @@ public class MainActivity extends AppCompatActivity
         if (prefs.getBoolean("firstrun", true)) {
             // Do first run stuff here then set 'first run' as false
             // using the following line to edit/commit prefs
-            prefs.edit().putBoolean("firstrun", false).commit();
+            prefs.edit().putBoolean("firstrun", false).apply();
         }
-        if (sortType == SORT_BY_FAVORITES)
+        if (sortType.equalsIgnoreCase(SORT_BY_FAVORITES))
             fetchMovies(sortType, currentPageNo);
     }
 
@@ -262,10 +259,7 @@ public class MainActivity extends AppCompatActivity
             adapter.setMovieData(data);
             if (mListState != null)
                 mRecyclerView.getLayoutManager().onRestoreInstanceState(mListState);
-        } else {
-
         }
-
     }
 
     @Override
@@ -343,7 +337,7 @@ public class MainActivity extends AppCompatActivity
 
     public void loadMovies(String sort, int page) {
         setSubtitle(sort);
-        if (sort == SORT_BY_FAVORITES)
+        if (sort.equalsIgnoreCase(SORT_BY_FAVORITES))
             new FetchFavorites().execute();
         else {
             URL movieRequestUrl = NetworkUtils.buildUrl(sort, page);
@@ -440,7 +434,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public boolean isNetworkAvailable() {
-        boolean status = false;
+        boolean status;
         try {
             ConnectivityManager cm =
                     (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -476,10 +470,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public class FetchFavorites extends AsyncTask<Void, Void, Cursor> {
-        String selection = null;
+        /*String selection = null;
         String[] selectionArgs = null;
         String sortOrder = MovieContract.MovieEntry._ID + " ASC";
-        List<MovieList> movieLists = new ArrayList<MovieList>();
+        List<MovieList> movieLists = new ArrayList<MovieList>();*/
         String[] projection = {
                 MovieContract.MovieEntry.COLUMN_MOVIE_ID, MovieContract.MovieEntry.COLUMN_MOVIE_TITLE,
                 MovieContract.MovieEntry.COLUMN_MOVIE_POSTR_PATH, MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,
@@ -494,7 +488,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected Cursor doInBackground(Void... params) {
-            Cursor mCursor = null;
+            /*Cursor mCursor = null;*/
             try {
                 return getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
                         projection,

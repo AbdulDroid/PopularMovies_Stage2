@@ -23,4 +23,5 @@
     <color name="grey">#424242</color>
     <color name="transparent_black">#5F000000</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="recycler_background">#F2F6F7</color>
 </resources>
