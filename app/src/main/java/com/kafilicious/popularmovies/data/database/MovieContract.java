@@ -1,4 +1,4 @@
-package com.kafilicious.popularmovies.database;
+package com.kafilicious.popularmovies.data.database;
 
 import android.net.Uri;
 import android.provider.BaseColumns;

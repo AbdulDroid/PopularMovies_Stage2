@@ -35,4 +35,10 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile 'de.hdodenhof:circleimageview:2.2.0'
     testCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
 }

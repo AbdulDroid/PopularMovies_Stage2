@@ -32,7 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kafilicious.popularmovies.adapters.MovieListAdapter;
-import com.kafilicious.popularmovies.database.MovieContract;
+import com.kafilicious.popularmovies.data.database.MovieContract;
 import com.kafilicious.popularmovies.models.MovieList;
 import com.kafilicious.popularmovies.R;
 import com.kafilicious.popularmovies.utils.NetworkUtils;
