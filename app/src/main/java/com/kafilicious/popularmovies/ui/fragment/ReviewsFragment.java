@@ -2,6 +2,7 @@ package com.kafilicious.popularmovies.ui.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.kafilicious.popularmovies.adapters.ReviewAdapter;
-import com.kafilicious.popularmovies.models.ReviewResults;
+import com.kafilicious.popularmovies.data.models.db.Review;
 import com.kafilicious.popularmovies.R;
 import com.kafilicious.popularmovies.ui.activity.DetailActivity;
 import com.kafilicious.popularmovies.utils.NetworkUtils;
@@ -37,13 +38,12 @@ public class ReviewsFragment extends Fragment {
     TextView errorMessageTextView;
     RecyclerView reviewRecyclerView;
     ReviewAdapter rAdapter;
-    List<ReviewResults> reviewList;
+    List<Review> reviewList;
     ProgressBar reviewsProgressBar;
     int movieId;
 
     public static ReviewsFragment newInstance() {
-        ReviewsFragment fragment = new ReviewsFragment();
-        return fragment;
+        return new ReviewsFragment();
     }
 
     @Override
@@ -53,14 +53,16 @@ public class ReviewsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review, container, false);
 
-        reviewsProgressBar = (ProgressBar) view.findViewById(R.id.progressbar_review);
-        errorMessageTextView = (TextView) view.findViewById(R.id.review_error_tv);
-        reviewRecyclerView = (RecyclerView) view.findViewById(R.id.review_rv);
+        reviewsProgressBar = view.findViewById(R.id.progressbar_review);
+        errorMessageTextView = view.findViewById(R.id.review_error_tv);
+        reviewRecyclerView = view.findViewById(R.id.review_rv);
         reviewRecyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(),
+                LinearLayoutManager.VERTICAL, false);
         reviewRecyclerView.setLayoutManager(layoutManager);
 
         movieId = DetailActivity.id;
@@ -102,7 +104,7 @@ public class ReviewsFragment extends Fragment {
         protected Void doInBackground(String... params) {
             String ids1 = params[0];
 
-            reviewList = new ArrayList<ReviewResults>();
+            reviewList = new ArrayList<>();
             try {
                 URL url = NetworkUtils.buildVideoDetailsUrl(ids1, 2);
                 String json = NetworkUtils.getResponseFromHttpUrl(url);
@@ -114,11 +116,11 @@ public class ReviewsFragment extends Fragment {
                     for (int i = 0; i < results.length(); i++) {
                         JSONObject object = results.getJSONObject(i);
 
-                        ReviewResults result = new ReviewResults();
-                        result.id = object.getString("id");
-                        result.author = object.getString("author");
-                        result.content = object.getString("content");
-                        result.url = object.getString("url");
+                        Review result = new Review();
+                        result.setId(object.getString("id"));
+                        result.setAuthor(object.getString("author"));
+                        result.setContent(object.getString("content"));
+                        result.setUrl(object.getString("url"));
                         reviewList.add(result);
                         Log.i("Results", "review results updated");
                     }

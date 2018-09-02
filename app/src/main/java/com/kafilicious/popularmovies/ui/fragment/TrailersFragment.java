@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,7 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.kafilicious.popularmovies.adapters.VideoAdapter;
-import com.kafilicious.popularmovies.models.VideoResults;
+import com.kafilicious.popularmovies.data.models.db.Video;
 import com.kafilicious.popularmovies.R;
 import com.kafilicious.popularmovies.ui.activity.DetailActivity;
 import com.kafilicious.popularmovies.utils.NetworkUtils;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Abdulkarim on 5/14/2017.
@@ -42,7 +44,7 @@ public class TrailersFragment extends Fragment {
     RecyclerView trailerRecyclerView;
     VideoAdapter vAdapter;
     int movieId;
-    List<VideoResults> videosList;
+    List<Video> videosList;
 
     public static TrailersFragment newInstance() {
          return new TrailersFragment();
@@ -61,16 +63,19 @@ public class TrailersFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_trailers, container, false);
         trailersProgressBar = view.findViewById(R.id.progressbar_trailer);
         errorMessageTextView = view.findViewById(R.id.video_error_tv);
         trailerRecyclerView = view.findViewById(R.id.video_rv);
         trailerRecyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        RecyclerView.LayoutManager gridLayout = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager(getActivity(),
+                LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager gridLayout = new GridLayoutManager(getActivity(), 2,
+                LinearLayoutManager.VERTICAL, false);
 
-        if (isTablet(getActivity()))
+        if (isTablet(Objects.requireNonNull(getActivity())))
             trailerRecyclerView.setLayoutManager(gridLayout);
         else
             trailerRecyclerView.setLayoutManager(layoutManager1);
@@ -122,11 +127,11 @@ public class TrailersFragment extends Fragment {
                     for (int i = 0; i < result.length(); i++) {
                         JSONObject obj = result.getJSONObject(i);
 
-                        VideoResults results = new VideoResults();
-                        results.type = obj.getString("type");
-                        results.key = obj.getString("key");
-                        results.site = obj.getString("site");
-                        results.name = obj.getString("name");
+                        Video results = new Video();
+                        results.setType(obj.getString("type"));
+                        results.setKey(obj.getString("key"));
+                        results.setSite(obj.getString("site"));
+                        results.setName(obj.getString("name"));
                         videosList.add(results);
 //                            Log.i("Results", "video results updated");
                     }

@@ -30,6 +30,7 @@
                     android:layout_weight="2"
                     android:adjustViewBounds="true"
                     android:paddingEnd="@dimen/padding_content_details"
+                    android:paddingStart="@dimen/margrinTop_five"
                     android:scaleType="fitXY"
                     tools:src="@drawable/placeholder" />
 
@@ -50,17 +51,22 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/nexlight"
                             android:paddingEnd="@dimen/margrinTop_five"
+                            android:paddingStart="@dimen/margrinTop_five"
                             android:text="@string/title_movie_details"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/movie_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
+                            android:fontFamily="@font/nexabold"
                             android:maxLines="1"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
                             tools:text="@string/placeHolder_text_title" />
 
                     </LinearLayout>
@@ -69,24 +75,29 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
                         android:paddingBottom="@dimen/padding_left_or_right"
                         android:paddingTop="@dimen/margrinTop_five">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/nexlight"
                             android:paddingBottom="@dimen/margrinTop_five"
                             android:paddingEnd="@dimen/margrinTop_five"
+                            android:paddingStart="@dimen/margrinTop_five"
                             android:text="@string/release_date_movie_details"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/movie_release_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/nexabold"
                             android:paddingTop="@dimen/margrinTop_five"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
                             tools:text="@string/placeHolder_text_year" />
 
                     </LinearLayout>
@@ -101,15 +112,20 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/nexlight"
                             android:paddingEnd="@dimen/margrinTop_five"
+                            android:paddingStart="@dimen/margrinTop_five"
                             android:text="@string/rating_movie_details"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/rating"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                            android:fontFamily="@font/nexabold"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
                             tools:text="@string/placeHolder_text_year" />
                     </LinearLayout>
 
@@ -124,9 +140,12 @@
                             android:id="@+id/rating_score_details"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:fontFamily="@font/nexlight"
                             android:paddingEnd="@dimen/margrinTop_five"
                             android:paddingStart="@dimen/padding_left_or_right"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textSize="13sp"
                             tools:text="@string/placeHolder_text_rating" />
 
                         <RatingBar
@@ -134,16 +153,20 @@
                             style="@style/Base.Widget.AppCompat.RatingBar.Small"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginStart="4dp"
                             android:numStars="5"
-                            android:paddingEnd="@dimen/margrinTop_five"
-                            android:paddingStart="@dimen/padding_left_or_right"
                             android:rating="4" />
 
                         <TextView
                             android:id="@+id/num_of_votes_details"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:fontFamily="@font/nexlight"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textSize="13sp"
                             tools:text="@string/placeHolder_text_vote" />
 
                     </LinearLayout>
@@ -158,21 +181,25 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
+        android:layout_marginTop="8dp"
         android:orientation="vertical">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/movie_details_tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="40dp"
             android:layout_gravity="bottom"
             android:background="@android:color/transparent"
             app:tabGravity="fill"
             app:tabIndicatorColor="@color/colorAccent"
             app:tabIndicatorHeight="2dp"
             app:tabMode="fixed"
-            app:tabPaddingEnd="12dp"
-            app:tabPaddingStart="12dp"
-            app:tabTextAppearance="@style/TextAppearance.Design.Tab"
+            app:tabPaddingBottom="0dp"
+            app:tabPaddingEnd="0dp"
+            app:tabPaddingStart="0dp"
+            app:tabPaddingTop="0dp"
+            app:tabSelectedTextColor="@color/colorAccent"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
             app:tabTextColor="@android:color/black" />
 
         <android.support.v4.view.ViewPager

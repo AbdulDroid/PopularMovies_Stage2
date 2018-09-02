@@ -42,7 +42,7 @@
                 android:layout_height="@dimen/height_width_fifteen"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/padding_left_or_right"
-                android:src="@drawable/ic_video_library_black_24dp" />
+                android:src="@drawable/ic_video" />
 
             <TextView
                 android:id="@+id/total_movies"
@@ -51,9 +51,9 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/margrinTop_five"
                 android:layout_toEndOf="@id/icon"
-                android:textColor="@android:color/tertiary_text_dark"
-                android:textSize="@dimen/text_size_content"
-                android:textStyle="bold" />
+                android:fontFamily="@font/nexabold"
+                android:textColor="@android:color/black"
+                android:textSize="13sp" />
 
             <ImageView
                 android:id="@+id/right_arrow"
@@ -62,7 +62,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="@dimen/margrinTop_five"
-                android:src="@drawable/ic_chevron_right_black_24dp" />
+                android:padding="4dp"
+                android:src="@drawable/ic_chevron_right" />
 
             <TextView
                 android:id="@+id/tv_total_pages"
@@ -72,12 +73,13 @@
                 android:layout_marginStart="@dimen/margrinTop_five"
                 android:layout_toStartOf="@id/right_arrow"
                 android:background="@drawable/urllinkbackground"
+                android:fontFamily="@font/nexabold"
                 android:paddingBottom="@dimen/margrinTop_five"
                 android:paddingLeft="@dimen/padding_left_or_right"
                 android:paddingRight="@dimen/padding_left_or_right"
                 android:paddingTop="@dimen/margrinTop_five"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/text_size_content" />
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/tv_of"
@@ -86,10 +88,11 @@
                 android:layout_centerInParent="true"
                 android:layout_marginStart="@dimen/margrinTop_five"
                 android:layout_toStartOf="@id/tv_total_pages"
+                android:fontFamily="@font/nexlight"
                 android:text="@string/of"
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/text_size_content" />
+                android:textSize="12sp" />
 
 
             <TextView
@@ -100,6 +103,7 @@
                 android:layout_marginStart="@dimen/margrinTop_five"
                 android:layout_toStartOf="@id/tv_of"
                 android:background="@drawable/urllinkbackground"
+                android:fontFamily="@font/nexabold"
                 android:paddingBottom="@dimen/margrinTop_five"
                 android:paddingLeft="@dimen/padding_left_or_right"
                 android:paddingRight="@dimen/padding_left_or_right"
@@ -107,15 +111,16 @@
                 android:text="@string/page_no"
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/text_size_content" />
+                android:textSize="13sp" />
 
             <ImageView
                 android:id="@+id/left_arrow"
                 android:layout_width="@dimen/height_width_thirty"
                 android:layout_height="@dimen/height_width_thirty"
+                android:padding="4dp"
                 android:layout_centerInParent="true"
                 android:layout_toStartOf="@id/tv_page_no"
-                android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+                android:src="@drawable/ic_chevron_left" />
 
         </RelativeLayout>
 
@@ -124,14 +129,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:backgroundTint="@color/grey"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:indeterminateBehavior="repeat"
             android:visibility="visible" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_movie_posters"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="3dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            app:spanCount="2"
+            tools:layoutManager="android.support.v7.widget.GridLayoutManager"
+            tools:listitem="@layout/movie_list_item"
             android:background="@color/recycler_background"
             android:layout_below="@id/info" />
     </RelativeLayout>

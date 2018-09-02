@@ -18,7 +18,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
@@ -26,23 +26,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparent_black"
-        android:paddingBottom="@dimen/height_width_thirty">
+        android:paddingBottom="@dimen/height_width_thirty"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="8dp">
 
         <TextView
             android:id="@+id/year_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:paddingTop="@dimen/margrinTop_five"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:fontFamily="@font/nexlight"
             android:textColor="@android:color/white"
+            android:textSize="13sp"
             tools:text="@string/placeHolder_text_year" />
 
         <TextView
@@ -50,10 +53,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@id/year_details"
+            android:layout_marginBottom="-4dp"
             android:ellipsize="end"
+            android:fontFamily="@font/nexabold"
             android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textColor="@android:color/white"
+            android:textSize="18sp"
             tools:text="Android Lollipop" />
 
         <TextView
@@ -62,7 +67,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:fontFamily="@font/nexlight"
             android:textColor="@android:color/white"
+            android:textSize="12sp"
             tools:text="@string/placeHolder_text_vote" />
 
         <RatingBar
@@ -71,9 +78,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@id/num_of_votes_detail"
+            android:layout_toStartOf="@id/num_of_votes_detail"
             android:numStars="5"
-            android:paddingRight="@dimen/margrinTop_five"
+            android:paddingEnd="@dimen/margrinTop_five"
             android:rating="4" />
 
         <TextView
@@ -81,9 +88,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@id/rating_bar_detail"
-            android:paddingRight="@dimen/margrinTop_five"
+            android:layout_toStartOf="@id/rating_bar_detail"
+            android:fontFamily="@font/nexlight"
+            android:paddingEnd="@dimen/margrinTop_five"
             android:textColor="@android:color/white"
+            android:textSize="12sp"
             tools:text="@string/placeHolder_text_rating" />
 
         <TextView
@@ -92,17 +101,38 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/rating_score_detail"
             android:layout_alignParentEnd="true"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:fontFamily="@font/nexlight"
             android:textColor="@android:color/white"
+            android:textSize="12sp"
             tools:text="10/10" />
 
-        <Button
+        <!--<Button
             android:id="@+id/favorite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/vote_average_details"
+            android:layout_margin="4dp"
+            android:textSize="10sp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/favor_btn_bg"
+            android:minWidth="16dp"
+            android:minHeight="16dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingEnd="16dp"
+            android:textAllCaps="false"
+            android:paddingStart="16dp"
             android:layout_alignParentEnd="true"
-            android:text="@string/button_text" />
+            android:layout_alignParentTop="true"
+            android:text="@string/button_text" />-->
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="4dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_star_border"/>
 
     </RelativeLayout>
 

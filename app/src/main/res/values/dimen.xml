@@ -23,7 +23,7 @@
     <dimen name="text_size_detail">24sp</dimen>
     <dimen name="padding_content_details">5dp</dimen>
     <dimen name="appbar_height">380dp</dimen>
-    <dimen name="divider_height_content">50dp</dimen>
+    <dimen name="divider_height_content">40dp</dimen>
     <dimen name="padding_left_or_right">10dp</dimen>
     <dimen name="height_width_fifteen">15dp</dimen>
     <dimen name="height_width_thirty">30dp</dimen>

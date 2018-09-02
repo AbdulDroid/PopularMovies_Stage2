@@ -38,9 +38,9 @@ public class NetworkUtils {
     private static final String BASE_IMAGE_URL =
             "http://image.tmdb.org/t/p/";
     private static final String DEFAULT_IMAGE_SIZE =
-            "w185/";
+            "w500/";
     private static final String BACKDROP_IMAGE_SIZE =
-            "w342/";
+            "original/";
     private static final String BASE_YOUTUBE_IMG_URL =
             "https://img.youtube.com/vi/";
     private static final String END_TAG_YOUTUBE_IMAGE_URL =
@@ -53,11 +53,10 @@ public class NetworkUtils {
             "&language=en-US&page=1";
 
 
-    public static URL buildUrl(String ads){
-        String address = ads;
-        URL url = null;
+    private static URL buildUrl(String ads){
+        URL url;
         try{
-            url = new URL(address);
+            url = new URL(ads);
         }catch (MalformedURLException e){
             e.printStackTrace();
             return null;

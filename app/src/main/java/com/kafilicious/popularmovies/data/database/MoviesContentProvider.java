@@ -12,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.util.Objects;
+
 import static com.kafilicious.popularmovies.data.database.MovieContract.MovieEntry.CONTENT_URI;
 import static com.kafilicious.popularmovies.data.database.MovieContract.MovieEntry.TABLE_ONE_NAME;
 
@@ -29,7 +31,8 @@ public class MoviesContentProvider extends ContentProvider {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
         uriMatcher.addURI(MovieContract.AUTHORITY, MovieContract.PATH_TASKS, FAVORITES);
-        uriMatcher.addURI(MovieContract.AUTHORITY, MovieContract.PATH_TASKS + "/#", FAVORITES_WITH_ID);
+        uriMatcher.addURI(MovieContract.AUTHORITY, MovieContract.PATH_TASKS + "/#",
+                FAVORITES_WITH_ID);
 
         return uriMatcher;
     }
@@ -63,7 +66,7 @@ public class MoviesContentProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        mCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        mCursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri);
         return mCursor;
     }
 
@@ -99,12 +102,13 @@ public class MoviesContentProvider extends ContentProvider {
 
         }
         //Notify the resolver of the changed uri, and return the newly inserted item URI
-        getContext().getContentResolver().notifyChange(uri, null);
+        Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
         return mUri;
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, @Nullable String selection,
+                      @Nullable String[] selectionArgs) {
         final SQLiteDatabase database = mMoviesDbHelper.getWritableDatabase();
 
         int match = mUriMatcher.match(uri);
@@ -130,7 +134,8 @@ public class MoviesContentProvider extends ContentProvider {
         if (favorite_deleted != 0){
 
             // An item delete task was done, set notification of data change
-            getContext().getContentResolver().notifyChange(uri, null);
+            Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri,
+                    null);
         }
 
         //Returns the number of items deleted int the task
@@ -138,7 +143,8 @@ public class MoviesContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection,
+                      @Nullable String[] selectionArgs) {
         final SQLiteDatabase database = mMoviesDbHelper.getWritableDatabase();
 
         final int match = mUriMatcher.match(uri);
@@ -153,7 +159,8 @@ public class MoviesContentProvider extends ContentProvider {
         }
 
         if (rows_changed != 0){
-            getContext().getContentResolver().notifyChange(uri, null);
+            Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri,
+                    null);
         }
 
         return rows_changed;

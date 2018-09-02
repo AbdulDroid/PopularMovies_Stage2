@@ -1,6 +1,7 @@
 package com.kafilicious.popularmovies.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -10,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kafilicious.popularmovies.models.ReviewResults;
+import com.kafilicious.popularmovies.data.models.db.Review;
 import com.kafilicious.popularmovies.R;
 
 import java.util.List;
@@ -33,37 +34,37 @@ import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder> {
 
-    Context mContext;
-    private List<ReviewResults> review_results;
+    private Context mContext;
+    private List<Review> review_results;
 
 
-    public ReviewAdapter(Context context, List<ReviewResults> results) {
+    public ReviewAdapter(Context context, List<Review> results) {
         this.mContext = context;
         this.review_results = results;
     }
 
-    public void setData(List<ReviewResults> reviewData) {
+    public void setData(List<Review> reviewData) {
         this.review_results = reviewData;
         notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         View view;
         view = LayoutInflater.from(context).inflate(R.layout.review_content, parent,false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        String text = "<a href='" + review_results.get(position).url + "'>Full Review link</a>";
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        String text = "<a href='" + review_results.get(position).getUrl() + "'>Full Review link</a>";
         text = String.format(mContext.getResources().getString(R.string.review_content_text),
                 Html.fromHtml(text));
         Log.i("ReviewAdapter: ", "built url for review " + text);
-        holder.authorTextView.setText(review_results.get(position).author);
-        holder.reviewTextView.setText(review_results.get(position).content);
+        holder.authorTextView.setText(review_results.get(position).getAuthor());
+        holder.reviewTextView.setText(review_results.get(position).getContent());
         holder.reviewLinkTextView.setText(text);
         holder.reviewLinkTextView.setClickable(true);
 
@@ -77,15 +78,15 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         return 0;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView authorTextView, reviewTextView, reviewLinkTextView;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
-            authorTextView = (TextView) view.findViewById(R.id.review_author);
-            reviewTextView = (TextView) view.findViewById(R.id.review_text);
-            reviewLinkTextView = (TextView) view.findViewById(R.id.complete_review_link);
+            authorTextView = view.findViewById(R.id.review_author);
+            reviewTextView = view.findViewById(R.id.review_text);
+            reviewLinkTextView = view.findViewById(R.id.complete_review_link);
             reviewLinkTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
 

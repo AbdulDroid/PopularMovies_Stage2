@@ -1,5 +1,6 @@
 package com.kafilicious.popularmovies.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -8,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
@@ -33,7 +35,7 @@ import android.widget.Toast;
 
 import com.kafilicious.popularmovies.adapters.MovieListAdapter;
 import com.kafilicious.popularmovies.data.database.MovieContract;
-import com.kafilicious.popularmovies.models.MovieList;
+import com.kafilicious.popularmovies.data.models.db.Movie;
 import com.kafilicious.popularmovies.R;
 import com.kafilicious.popularmovies.utils.NetworkUtils;
 
@@ -45,6 +47,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /*
  * Copyright (C) 2017 Popular Movies, Stage 2
@@ -63,7 +66,7 @@ import java.util.List;
 */
 
 public class MainActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<List<MovieList>>, View.OnClickListener {
+        implements LoaderManager.LoaderCallbacks<List<Movie>>, View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int THEMOVIEDB_SEARCH_LOADER = 0;
@@ -81,7 +84,7 @@ public class MainActivity extends AppCompatActivity
     RecyclerView.LayoutManager layoutManager;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
-    private List<MovieList> movie_list;
+    private List<Movie> movie_list;
     private TextView mMovieCountTextView, mPageTextView, mCurrentPageTextView, ofTextView;
     private ImageView rightArrow, leftArrow;
     private CoordinatorLayout coordinatorLayout;
@@ -141,7 +144,7 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setNestedScrollingEnabled(false);
         fetchMovies(sortType, currentPageNo);
 
-        LoaderCallbacks<List<MovieList>> callback = MainActivity.this;
+        LoaderCallbacks<List<Movie>> callback = MainActivity.this;
 
         getSupportLoaderManager().initLoader(THEMOVIEDB_SEARCH_LOADER, null, callback);
 
@@ -150,7 +153,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onPause() {
-        mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        mListState = Objects.requireNonNull(mRecyclerView.getLayoutManager()).onSaveInstanceState();
         super.onPause();
     }
 
@@ -166,12 +169,14 @@ public class MainActivity extends AppCompatActivity
             fetchMovies(sortType, currentPageNo);
     }
 
+    @SuppressLint("StaticFieldLeak")
+    @NonNull
     @Override
-    public Loader<List<MovieList>> onCreateLoader(int id, final Bundle args) {
+    public Loader<List<Movie>> onCreateLoader(int id, final Bundle args) {
 
-        return new AsyncTaskLoader<List<MovieList>>(this) {
+        return new AsyncTaskLoader<List<Movie>>(this) {
 
-            List<MovieList> movies = new ArrayList<MovieList>();
+            List<Movie> movies = new ArrayList<>();
 
 
             @Override
@@ -189,7 +194,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public List<MovieList> loadInBackground() {
+            public List<Movie> loadInBackground() {
                 String urlQuery = null;
                 if (args != null) {
                     urlQuery = args.getString(SEARCH_QUERY_URL_EXTRA);
@@ -206,7 +211,7 @@ public class MainActivity extends AppCompatActivity
                     String jsonResponse =
                             NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
                     try {
-                        List<MovieList> movieLists = new ArrayList<MovieList>();
+                        List<Movie> Movies = new ArrayList<>();
                         JSONObject object = new JSONObject(jsonResponse);
                         totalPages = object.getLong("total_pages");
                         totalPageNo = (int) totalPages;
@@ -217,20 +222,20 @@ public class MainActivity extends AppCompatActivity
                             JSONObject obj = jsonArray.getJSONObject(i);
 
 
-                            MovieList addMovies = new MovieList();
-                            addMovies.overview = obj.getString("overview");
-                            addMovies.releaseDate = obj.getString("release_date");
-                            addMovies.title = obj.getString("title");
-                            addMovies.voteAverage = obj.getDouble("vote_average");
-                            addMovies.voteCount = obj.getLong("vote_count");
-                            addMovies.id = obj.getInt("id");
-                            addMovies.posterPath = obj.getString("poster_path");
-                            addMovies.backdropPath = obj.getString("backdrop_path");
-                            movieLists.add(addMovies);
+                            Movie addMovies = new Movie();
+                            addMovies.setOverview(obj.getString("overview"));
+                            addMovies.setReleaseDate(obj.getString("release_date"));
+                            addMovies.setTitle(obj.getString("title"));
+                            addMovies.setVoteAverage(obj.getDouble("vote_average"));
+                            addMovies.setVoteCount(obj.getLong("vote_count"));
+                            addMovies.setId(obj.getInt("id"));
+                            addMovies.setPosterPath(obj.getString("poster_path"));
+                            addMovies.setBackdropPath(obj.getString("backdrop_path"));
+                            Movies.add(addMovies);
 
                         }
 
-                        return movieLists;
+                        return Movies;
 
                     } catch (JSONException j) {
                         j.printStackTrace();
@@ -243,7 +248,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
 
-            public void deliverResult(List<MovieList> data) {
+            public void deliverResult(List<Movie> data) {
                 movies = data;
                 super.deliverResult(data);
             }
@@ -251,20 +256,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLoadFinished(Loader<List<MovieList>> loader, List<MovieList> data) {
+    public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
         if (data != null && !data.isEmpty()) {
             updateUI();
             showViews();
             setTextViews(totalPages, totalResults);
             adapter.setMovieData(data);
             if (mListState != null)
-                mRecyclerView.getLayoutManager().onRestoreInstanceState(mListState);
+                Objects.requireNonNull(mRecyclerView.getLayoutManager())
+                        .onRestoreInstanceState(mListState);
         }
     }
 
     @Override
-    public void onLoaderReset(Loader<List<MovieList>> loader) {
-        adapter.setMovieData(new ArrayList<MovieList>());
+    public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
+        adapter.setMovieData(new ArrayList<Movie>());
     }
 
     public void fetchMovies(final String sort, final int page) {
@@ -347,7 +353,7 @@ public class MainActivity extends AppCompatActivity
 
             LoaderManager loaderManager = getSupportLoaderManager();
 
-            Loader<MovieList> movieSearchLoader = loaderManager.getLoader(THEMOVIEDB_SEARCH_LOADER);
+            Loader<Movie> movieSearchLoader = loaderManager.getLoader(THEMOVIEDB_SEARCH_LOADER);
 
             if (movieSearchLoader == null) {
                 loaderManager.initLoader(THEMOVIEDB_SEARCH_LOADER, queryBundle, this);
@@ -439,6 +445,7 @@ public class MainActivity extends AppCompatActivity
             ConnectivityManager cm =
                     (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
+            assert cm != null;
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
             status = activeNetwork != null &&
                     activeNetwork.isConnectedOrConnecting();
@@ -454,7 +461,7 @@ public class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString("sortPref", sortType);
         outState.putInt("pageNo", currentPageNo);
-        mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        mListState = Objects.requireNonNull(mRecyclerView.getLayoutManager()).onSaveInstanceState();
         outState.putParcelable(LIST_STATE_KEY, mListState);
         super.onSaveInstanceState(outState);
     }
@@ -473,12 +480,16 @@ public class MainActivity extends AppCompatActivity
         /*String selection = null;
         String[] selectionArgs = null;
         String sortOrder = MovieContract.MovieEntry._ID + " ASC";
-        List<MovieList> movieLists = new ArrayList<MovieList>();*/
+        List<Movie> Movies = new ArrayList<Movie>();*/
         String[] projection = {
-                MovieContract.MovieEntry.COLUMN_MOVIE_ID, MovieContract.MovieEntry.COLUMN_MOVIE_TITLE,
-                MovieContract.MovieEntry.COLUMN_MOVIE_POSTR_PATH, MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,
-                MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE, MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH,
-                MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT, MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE
+                MovieContract.MovieEntry.COLUMN_MOVIE_ID,
+                MovieContract.MovieEntry.COLUMN_MOVIE_TITLE,
+                MovieContract.MovieEntry.COLUMN_MOVIE_POSTR_PATH,
+                MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,
+                MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE,
+                MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH,
+                MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT,
+                MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE
         };
 
         @Override
@@ -505,35 +516,36 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Cursor data) {
-            List<MovieList> movieList_from_cursor = new ArrayList<>();
+            List<Movie> Movie_from_cursor = new ArrayList<>();
             if (data != null) {
                 if (data.moveToFirst()) {
                     do {
-                        MovieList movies = new MovieList();
-                        movies.id = Long.parseLong(data.getString(data.getColumnIndex(MovieContract
-                                .MovieEntry.COLUMN_MOVIE_ID)));
-                        movies.title = data.getString(data.getColumnIndex(MovieContract.MovieEntry
-                                .COLUMN_MOVIE_TITLE));
-                        movies.posterPath = data.getString(data.getColumnIndex(MovieContract.MovieEntry
-                                .COLUMN_MOVIE_POSTR_PATH));
-                        movies.backdropPath = data.getString(data.getColumnIndex(MovieContract
-                                .MovieEntry.COLUMN_MOVIE_BACKDROP_PATH));
-                        movies.overview = data.getString(data.getColumnIndex(MovieContract.MovieEntry
-                                .COLUMN_MOVIE_OVERVIEW));
-                        movies.releaseDate = data.getString(data.getColumnIndex(MovieContract
-                                .MovieEntry.COLUMN_MOVIE_RELEASE_DATE));
-                        movies.voteCount = Long.parseLong(data.getString(data
-                                .getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT)));
-                        movies.voteAverage = Double.parseDouble(data.getString(data.
-                                getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE)));
+                        Movie movies = new Movie();
+                        movies.setId(Long.parseLong(data.getString(data.getColumnIndex(MovieContract
+                                .MovieEntry.COLUMN_MOVIE_ID))));
+                        movies.setTitle(data.getString(data.getColumnIndex(MovieContract.MovieEntry
+                                .COLUMN_MOVIE_TITLE)));
+                        movies.setPosterPath(data.getString(data.getColumnIndex(MovieContract.MovieEntry
+                                .COLUMN_MOVIE_POSTR_PATH)));
+                        movies.setBackdropPath(data.getString(data.getColumnIndex(MovieContract
+                                .MovieEntry.COLUMN_MOVIE_BACKDROP_PATH)));
+                        movies.setOverview(data.getString(data.getColumnIndex(MovieContract.MovieEntry
+                                .COLUMN_MOVIE_OVERVIEW)));
+                        movies.setReleaseDate(data.getString(data.getColumnIndex(MovieContract
+                                .MovieEntry.COLUMN_MOVIE_RELEASE_DATE)));
+                        movies.setVoteCount(Long.parseLong(data.getString(data
+                                .getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT))));
+                        movies.setVoteAverage(Double.parseDouble(data.getString(data.
+                                getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE))));
 
-                        movieList_from_cursor.add(movies);
+                        Movie_from_cursor.add(movies);
                     } while (data.moveToNext());
 
-                    movie_list = movieList_from_cursor;
+                    movie_list = Movie_from_cursor;
                     adapter.setMovieData(movie_list);
                     if (mListState != null) {
-                        mRecyclerView.getLayoutManager().onRestoreInstanceState(mListState);
+                        Objects.requireNonNull(mRecyclerView.getLayoutManager())
+                                .onRestoreInstanceState(mListState);
                     }
                     updateUI();
                     hideViews();

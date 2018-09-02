@@ -3,6 +3,7 @@ package com.kafilicious.popularmovies.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kafilicious.popularmovies.models.VideoResults;
+import com.kafilicious.popularmovies.data.models.db.Video;
 import com.kafilicious.popularmovies.R;
 import com.kafilicious.popularmovies.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -39,39 +40,41 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> {
 
-    List<VideoResults>video_results;
+    private List<Video>video_results;
     private Context context;
 
-    public VideoAdapter(Context context, List<VideoResults> results) {
+    public VideoAdapter(Context context, List<Video> results) {
         this.context = context;
         this.video_results = results;
     }
 
-    public void setData(List<VideoResults> videoData){
+    public void setData(List<Video> videoData){
         this.video_results = videoData;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         View view;
-        view = LayoutInflater.from(context).inflate(R.layout.video_content, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        view = LayoutInflater.from(context).inflate(R.layout.video_content, parent,
+                false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        String site = video_results.get(position).site;
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        String site = video_results.get(position).getSite();
 
-        holder.videoName.setText(video_results.get(position).name);
-        holder.videoType.setText(video_results.get(position).type);
+        holder.videoName.setText(video_results.get(position).getName());
+        holder.videoType.setText(video_results.get(position).getType());
 
         if (site.equals("YouTube")) {
 
-            String url = NetworkUtils.buildYoutubeImageUrl(video_results.get(position).key).toString();
+            String url = NetworkUtils.buildYoutubeImageUrl(video_results.get(position).getKey())
+                    .toString();
             holder.playImageView.setVisibility(View.VISIBLE);
-            Picasso.with(context)
+            Picasso.get()
                     .load(url)
                     .into(holder.youtubeImageView);
         }
@@ -88,20 +91,20 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         TextView videoType, videoName;
         CircleImageView playImageView;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             view.setClickable(true);
             view.setOnClickListener(this);
-            youtubeImageView = (ImageView) view.findViewById(R.id.youtube_iv);
-            videoName = (TextView) view.findViewById(R.id.video_name);
-            videoType = (TextView) view.findViewById(R.id.video_type);
-            playImageView = (CircleImageView) view.findViewById(R.id.circle_play);
+            youtubeImageView = view.findViewById(R.id.youtube_iv);
+            videoName = view.findViewById(R.id.video_name);
+            videoType = view.findViewById(R.id.video_type);
+            playImageView = view.findViewById(R.id.circle_play);
         }
 
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            URL url = NetworkUtils.buildYoutubeVideoUrl(video_results.get(position).key);
+            URL url = NetworkUtils.buildYoutubeVideoUrl(video_results.get(position).getKey());
             if (url != null){
                 Uri uri = Uri.parse(url.toString());
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -110,7 +113,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
                 if (intent.resolveActivity(context.getPackageManager()) != null){
                     context.startActivity(intent);
                 }else {
-                    Log.i("Results", "Could not call" + uri.toString() + ", no receiving app installed on your device!");
+                    Log.i("Results", "Could not call" + uri.toString() + "," +
+                            " no receiving app installed on your device!");
                 }
             }
 

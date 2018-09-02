@@ -34,19 +34,20 @@
         android:paddingBottom="@dimen/margrinTop_five">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/placeholder" />
 
         <TextView
             android:id="@+id/review_author"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:fontFamily="@font/nexabold"
             android:gravity="start|center"
             android:paddingLeft="@dimen/padding_left_or_right"
             android:paddingRight="@dimen/padding_left_or_right"
             android:paddingStart="@dimen/padding_left_or_right"
-            android:textSize="28sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             tools:text="@string/authors_name" />
     </LinearLayout>
@@ -56,13 +57,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
+        android:fontFamily="@font/nexlight"
         android:maxLines="6"
         android:paddingEnd="@dimen/padding_left_or_right"
         android:paddingLeft="@dimen/padding_left_or_right"
         android:paddingRight="@dimen/padding_left_or_right"
         android:paddingStart="@dimen/padding_left_or_right"
         android:paddingTop="@dimen/margrinTop_five"
-        android:textSize="18sp"
+        android:textSize="13sp"
+        android:textStyle="italic"
         tools:text="Associate Android Developer Fast Track" />
 
     <TextView
@@ -71,11 +74,12 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
+        android:fontFamily="@font/nexabold"
         android:paddingEnd="@dimen/padding_left_or_right"
         android:paddingLeft="@dimen/padding_left_or_right"
         android:paddingRight="@dimen/padding_left_or_right"
         android:paddingStart="@dimen/padding_left_or_right"
         android:paddingTop="@dimen/margrinTop_five"
-        android:textSize="18sp"
+        android:textSize="13sp"
         tools:text="This course is designed to help guide intending applicants for the Google Associate Android Developer Certification" />
 </LinearLayout>
